@@ -247,3 +247,53 @@ a {
     padding-block: 26px;
   }
 }
+
+/* Language switch */
+
+.site-nav-actions {
+  justify-self: end;
+
+  display: flex;
+  gap: 22px;
+  align-items: center;
+}
+
+.site-language {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+
+  color: #65717d;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.site-language a {
+  transition: color 160ms ease;
+}
+
+.site-language a:hover,
+.site-language a.active {
+  color: var(--text);
+}
+
+.site-language a.active {
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .site-nav-actions {
+    gap: 14px;
+  }
+
+  .site-github-link {
+    display: none;
+  }
+}

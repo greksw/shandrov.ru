@@ -1,3 +1,19 @@
+---
+interface Props {
+  lang?: "ru" | "en";
+}
+
+const {
+  lang = "en",
+} = Astro.props;
+
+const isRu = lang === "ru";
+
+const privacyHref = isRu
+  ? "/privacy/"
+  : "/en/privacy/";
+---
+
 <footer class="site-footer">
   <div class="site-container site-footer-inner">
     <span>
@@ -5,12 +21,16 @@
     </span>
 
     <span>
-      Infrastructure Engineer / Infrastructure Lead
+      {
+        isRu
+          ? "Инженер инфраструктуры / Руководитель инфраструктуры"
+          : "Infrastructure Engineer / Infrastructure Lead"
+      }
     </span>
 
     <div class="site-footer-links">
-      <a href="/privacy/">
-        Privacy
+      <a href={privacyHref}>
+        {isRu ? "Конфиденциальность" : "Privacy"}
       </a>
 
       <span class="site-footer-separator">

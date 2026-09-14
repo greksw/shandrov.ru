@@ -1,68 +1,80 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const updated = "14 September 2026";
+const updated = "14 сентября 2026";
 ---
 
 <BaseLayout
-  title="Privacy — Tudor Shandrov"
-  description="Privacy and data use information for shandrov.ru."
+  title="Конфиденциальность — Tudor Shandrov"
+  description="Информация о конфиденциальности и обработке данных на shandrov.ru."
+  lang="ru"
 >
   <main class="privacy-container">
-    <a class="back" href="/">← shandrov.ru</a>
+    <div class="privacy-topline">
+      <a class="back" href="/">← shandrov.ru</a>
 
-    <span class="index">PRIVACY / DATA USE</span>
+      <div class="privacy-language" aria-label="Language selection">
+        <span class="active">RU</span>
+        <span aria-hidden="true">/</span>
+        <a href="/en/privacy/">EN</a>
+      </div>
+    </div>
 
-    <h1>Privacy by minimal collection.</h1>
+    <span class="index">КОНФИДЕНЦИАЛЬНОСТЬ / ДАННЫЕ</span>
+
+    <h1>Конфиденциальность через минимальный сбор данных.</h1>
 
     <p class="lead">
-      shandrov.ru is a static professional website designed to minimize
-      collection of visitor data.
+      shandrov.ru — статический профессиональный сайт, спроектированный
+      так, чтобы свести к минимуму сбор данных посетителей.
     </p>
 
     <section>
-      <h2>Cookies</h2>
+      <h2>Файлы cookie</h2>
       <p>
-        The site does not currently use analytics, advertising or other
-        non-essential cookies.
+        Сайт в настоящее время не использует аналитику, рекламу или другие
+        необязательные файлы cookie.
       </p>
     </section>
 
     <section>
-      <h2>Analytics and tracking</h2>
+      <h2>Аналитика и отслеживание</h2>
       <p>
-        Google Analytics, Yandex Metrica, advertising pixels and similar
-        browser-side tracking systems are not currently enabled.
+        Google Analytics, Яндекс Метрика, рекламные пиксели и аналогичные
+        системы отслеживания на стороне браузера в настоящее время
+        не используются.
       </p>
     </section>
 
     <section>
-      <h2>Forms and accounts</h2>
+      <h2>Формы и учётные записи</h2>
       <p>
-        The site currently provides no user accounts, newsletter
-        subscriptions or contact forms.
+        На сайте нет пользовательских учётных записей, подписки
+        на рассылку или контактных форм.
       </p>
     </section>
 
     <section>
-      <h2>Technical server data</h2>
+      <h2>Технические данные сервера</h2>
       <p>
-        Web and network infrastructure may process technical connection
-        information required to deliver, troubleshoot and protect the site,
-        including standard server log data. It is not used here for
-        advertising profiles or behavioral personalization.
+        Веб- и сетевая инфраструктура может обрабатывать техническую
+        информацию о соединении, необходимую для доставки, диагностики
+        и защиты сайта, включая стандартные данные журналов сервера.
+        Эти данные не используются для рекламных профилей или
+        поведенческой персонализации.
       </p>
     </section>
 
     <section>
-      <h2>External links</h2>
+      <h2>Внешние ссылки</h2>
       <p>
-        Links to external resources such as GitHub and Runer's Lab lead to
-        independent services with their own data processing practices.
+        Ссылки на внешние ресурсы, такие как GitHub и Runer's Lab,
+        ведут на независимые сервисы с собственными правилами
+        обработки данных.
       </p>
     </section>
 
-    <p class="updated">Updated: {updated}</p>
+    <p class="updated">Обновлено: {updated}</p>
   </main>
 
   <style>
@@ -72,7 +84,37 @@ const updated = "14 September 2026";
       padding: 80px 0 120px;
     }
 
-    .back {
+    .privacy-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .privacy-language {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    color: #65717d;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .privacy-language .active {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .privacy-language a {
+    transition: color 160ms ease;
+  }
+
+  .privacy-language a:hover {
+    color: var(--text);
+  }
+
+  .back {
       display: inline-block;
       margin-bottom: 80px;
       color: #9aa7b4;

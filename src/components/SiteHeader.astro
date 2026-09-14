@@ -1,11 +1,47 @@
 ---
 interface Props {
-  homeHref?: string;
+  lang?: "ru" | "en";
 }
 
 const {
-  homeHref = "/",
+  lang = "en",
 } = Astro.props;
+
+const isRu = lang === "ru";
+
+const pathname = Astro.url.pathname;
+
+const ruHref =
+  pathname === "/en/"
+    ? "/"
+    : pathname.startsWith("/en/")
+      ? pathname.slice(3)
+      : pathname;
+
+const enHref =
+  pathname === "/"
+    ? "/en/"
+    : pathname.startsWith("/en/")
+      ? pathname
+      : `/en${pathname}`;
+
+const homeHref = isRu ? "/" : "/en/";
+
+const labels = isRu
+  ? {
+      expertise: "Экспертиза",
+      projects: "Проекты",
+      about: "Обо мне",
+      notes: "Заметки",
+      home: "Главная Tudor Shandrov",
+    }
+  : {
+      expertise: "Expertise",
+      projects: "Projects",
+      about: "About",
+      notes: "Notes",
+      home: "Tudor Shandrov home",
+    };
 ---
 
 <header class="site-header">
@@ -13,9 +49,10 @@ const {
     <a
       href={homeHref}
       class="site-brand"
-      aria-label="Tudor Shandrov home"
+      aria-label={labels.home}
     >
       <span class="site-brand-mark">TS</span>
+
       <span class="site-brand-name">
         Tudor Shandrov
       </span>
@@ -23,29 +60,62 @@ const {
 
     <nav
       class="site-nav-links"
-      aria-label="Main navigation"
+      aria-label={isRu ? "Основная навигация" : "Main navigation"}
     >
-      <a href="/#expertise">Expertise</a>
-      <a href="/#projects">Projects</a>
-      <a href="/#about">About</a>
+      <a href={`${homeHref}#expertise`}>
+        {labels.expertise}
+      </a>
+
+      <a href={`${homeHref}#projects`}>
+        {labels.projects}
+      </a>
+
+      <a href={`${homeHref}#about`}>
+        {labels.about}
+      </a>
 
       <a
         href="https://runer.su"
         target="_blank"
         rel="noreferrer"
       >
-        Notes
+        {labels.notes}
       </a>
     </nav>
 
-    <a
-      class="site-github-link"
-      href="https://github.com/greksw"
-      target="_blank"
-      rel="noreferrer"
-    >
-      GitHub
-      <span aria-hidden="true">↗</span>
-    </a>
+    <div class="site-nav-actions">
+      <div
+        class="site-language"
+        aria-label={isRu ? "Выбор языка" : "Language selection"}
+      >
+        <a
+          href={ruHref}
+          aria-current={isRu ? "page" : undefined}
+          class:list={{ active: isRu }}
+        >
+          RU
+        </a>
+
+        <span aria-hidden="true">/</span>
+
+        <a
+          href={enHref}
+          aria-current={!isRu ? "page" : undefined}
+          class:list={{ active: !isRu }}
+        >
+          EN
+        </a>
+      </div>
+
+      <a
+        class="site-github-link"
+        href="https://github.com/greksw"
+        target="_blank"
+        rel="noreferrer"
+      >
+        GitHub
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
   </div>
 </header>

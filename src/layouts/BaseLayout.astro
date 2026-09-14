@@ -4,7 +4,7 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description: string;
-  lang?: string;
+  lang?: "ru" | "en";
 }
 
 const {
@@ -13,7 +13,31 @@ const {
   lang = "en",
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site);
+const pathname = Astro.url.pathname;
+
+const ruPath =
+  pathname === "/en" || pathname === "/en/"
+    ? "/"
+    : pathname.startsWith("/en/")
+      ? pathname.slice(3)
+      : pathname;
+
+const enPath =
+  pathname === "/"
+    ? "/en/"
+    : pathname === "/en" || pathname.startsWith("/en/")
+      ? pathname
+      : `/en${pathname}`;
+
+const canonical = new URL(pathname, Astro.site);
+const ruUrl = new URL(ruPath, Astro.site);
+const enUrl = new URL(enPath, Astro.site);
+
+/*
+ * shandrov.ru uses Russian as the default/root locale.
+ * x-default therefore points to the Russian counterpart.
+ */
+const defaultUrl = ruUrl;
 ---
 
 <!doctype html>
@@ -39,6 +63,24 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link
       rel="canonical"
       href={canonical}
+    />
+
+    <link
+      rel="alternate"
+      hreflang="ru"
+      href={ruUrl}
+    />
+
+    <link
+      rel="alternate"
+      hreflang="en"
+      href={enUrl}
+    />
+
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={defaultUrl}
     />
 
     <link
