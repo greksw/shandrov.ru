@@ -298,3 +298,9 @@ a {
     display: none;
   }
 }
+
+.site-nav-links a.active,
+.site-nav-links a[aria-current="page"] {
+  color: var(--text);
+  font-weight: 700;
+}

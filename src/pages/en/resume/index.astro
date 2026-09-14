@@ -1,0 +1,1094 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
+import SiteFooter from "../../../components/SiteFooter.astro";
+
+const expertise = [
+  {
+    title: "Linux & Platforms",
+    text: "Operation of Linux systems and infrastructure services, hardening, troubleshooting and production support.",
+    tags: ["AlmaLinux", "Debian", "Bash", "Ansible"],
+  },
+  {
+    title: "Virtualization & Storage",
+    text: "Design and operation of virtualization clusters, distributed storage and backup platforms.",
+    tags: ["Proxmox VE", "Ceph", "PBS", "TrueNAS"],
+  },
+  {
+    title: "Networking",
+    text: "Multi-site networks, segmentation, routing, VPN, resilient Internet connectivity and network infrastructure operations.",
+    tags: ["MikroTik", "VLAN", "WireGuard", "IPsec"],
+  },
+  {
+    title: "Observability",
+    text: "Infrastructure monitoring, metrics, logs, alerting and building an operational view of the environment.",
+    tags: ["Prometheus", "Grafana", "Loki", "Zabbix"],
+  },
+  {
+    title: "Security",
+    text: "Configuration control, centralized auditing, segmentation and reduction of infrastructure risk.",
+    tags: ["Wazuh", "Firewall", "Hardening", "Audit"],
+  },
+  {
+    title: "Infrastructure Operations",
+    text: "Incident response, migrations, backup, documentation, team coordination and contractor management.",
+    tags: ["Operations", "Backup", "DR", "Runbooks"],
+  },
+];
+
+
+const projects = [
+  {
+    number: "01",
+    title: "Multi-site Infrastructure",
+    text: "Multi-site connectivity, segmentation, routing, VPN and a unified operational model for infrastructure.",
+  },
+  {
+    number: "02",
+    title: "Proxmox & Ceph Platform",
+    text: "Cluster virtualization, distributed storage, HA, backup and operation of production workloads.",
+  },
+  {
+    number: "03",
+    title: "Observability Platform",
+    text: "Prometheus, Grafana, Loki and Zabbix for metrics, logs, infrastructure checks and alerting.",
+  },
+  {
+    number: "04",
+    title: "Infrastructure Deployment",
+    text: "End-to-end delivery of a new production site: networking, virtualization, storage, identity, backup, migration and documentation.",
+    href: "/en/projects/infrastructure-deployment/",
+  },
+];
+
+
+const experience = [
+  {
+    period: "September 2022 — Present",
+    company: "Zavod AKS Group",
+    role: "Head of IT Infrastructure / Senior Linux Engineer",
+    bullets: [
+      "Responsible for server, network and backup infrastructure across multiple production sites supporting 150+ users and 40+ servers.",
+      "Lead a three-person infrastructure team; recruited and trained two system administrators and established knowledge transfer and areas of responsibility.",
+      "Operate a 9-node primary Proxmox VE cluster, a standalone remote node and an additional 3-node cluster, including HA, live migration, quorum and workload distribution.",
+      "Deployed a 3-node Proxmox VE + Ceph + NFS cluster with a dedicated 10 Gb/s network and separated management, production, storage and backup planes.",
+      "Develop observability and security using Prometheus, Grafana, Loki, Zabbix, Wazuh, rsyslog and SCA controls.",
+      "Design and operate MikroTik networking with 50+ VLANs, IPsec, WireGuard, OSPF, LACP, NAT, filtering and WAN redundancy.",
+    ],
+  },
+  {
+    period: "January 2018 — September 2022",
+    company: "Fond-Metall LLC",
+    role: "System Administrator / Linux Infrastructure Engineer",
+    bullets: [
+      "Supported Linux and Windows servers, Proxmox VE, Active Directory and network infrastructure across office and production sites.",
+      "Introduced Proxmox, Zabbix and corporate IP telephony based on Asterisk.",
+      "Built inter-site VPN connectivity, implemented VLAN segmentation and backup using Veeam and TrueNAS.",
+    ],
+  },
+  {
+    period: "July 2016 — December 2017",
+    company: "Children's City Hospital No. 1",
+    role: "Head of Information Technology",
+    bullets: [
+      "Led the IT department and operation of server, network and end-user infrastructure.",
+      "Managed deployment of an 11-module medical information system.",
+      "Participated in deployment of a 10 Gb network core, introduced Zabbix and migrated part of the workstation estate to Linux.",
+    ],
+  },
+  {
+    period: "February 2014 — July 2016",
+    company: "Fond-Metall LLC",
+    role: "System Administrator",
+    bullets: [
+      "Supported office and production-site infrastructure, servers and network equipment.",
+      "Deployed Hyper-V and introduced VLANs, Veeam, FreeNAS and Zabbix monitoring.",
+      "Designed LAN and VPN connectivity and participated in server infrastructure modernization.",
+    ],
+  },
+  {
+    period: "September 2011 — January 2014",
+    company: "Budu Mamoy / BINKO Corporation",
+    role: "Senior System Administrator",
+    bullets: [
+      "Supported two offices and infrastructure serving a network of 100 retail stores across Russia.",
+      "Managed IT projects and contractors and introduced VMware, QNAP and Linux Samba.",
+      "Configured VPN connectivity between stores and the central office.",
+    ],
+  },
+  {
+    period: "June 2009 — September 2011",
+    company: "North-West Technical University",
+    role: "System Administrator",
+    bullets: [
+      "Supported computer labs, servers and Active Directory.",
+      "Introduced Nagios and participated in virtualization and automation of laboratory environments.",
+    ],
+  },
+  {
+    period: "October 2003 — August 2007",
+    company: "PTEL No. 6",
+    role: "System Administrator",
+    note: "Combined system administration work with studies on a flexible schedule.",
+    bullets: [
+      "Administered educational networks, servers and workstations.",
+      "Introduced Active Directory, prepared virtual laboratories and participated in migration of part of the infrastructure to ALT Linux.",
+    ],
+  },
+];
+
+const education = [
+  {
+    year: "2011",
+    title: "North-West Technical University",
+    text: "Systems Analysis, Automation and Control in Information Systems · higher education",
+  },
+  {
+    year: "2006",
+    title: "PTEL No. 6",
+    text: "Computer Operator · secondary vocational education",
+  },
+];
+
+const certifications = [
+  "2025 · MikroTik Certified Network Associate (MTCNA), SPW",
+  "2025 · MikroTik Certified Routing Engineer (MTCRE), SPW",
+  "2024 · Python Fundamentals · Skillbox / DevOps Engineer PRO 2.0",
+  "2019 · Corporate IP Telephony with Asterisk · basic, advanced and expert courses",
+  "2019 · Linux Professional Institute · Level 2",
+  "2018 · Cisco ICND1",
+  "2018 · Zabbix Monitoring System",
+  "2017 · Red Hat System Administrator I (RH124)",
+];
+
+const stackGroups = [
+  {
+    label: "Platforms",
+    value: "Linux · Proxmox VE · Windows Server · Docker",
+  },
+  {
+    label: "Storage & Backup",
+    value: "Ceph · PBS · TrueNAS · NFS · SMB",
+  },
+  {
+    label: "Networking",
+    value: "MikroTik · VLAN · LACP · WireGuard · IPsec · OpenVPN",
+  },
+  {
+    label: "Observability",
+    value: "Prometheus · Grafana · Loki · Zabbix",
+  },
+  {
+    label: "Security",
+    value: "Wazuh · nftables · firewalld · network segmentation",
+  },
+  {
+    label: "Automation",
+    value: "Ansible · Bash · PowerShell · Python · Git",
+  },
+];
+---
+
+<BaseLayout
+  title="Resume — Tudor Shandrov"
+  description="Professional profile of Tudor Shandrov: infrastructure engineering, Linux, Proxmox, Ceph, networking, observability, security and operations."
+  lang="en"
+>
+  <SiteHeader lang="en" />
+
+  <main>
+    <section class="resume-hero container">
+      <span class="resume-index">RESUME / CV</span>
+
+      <div class="resume-hero-grid">
+        <div>
+          <h1>Tudor Shandrov</h1>
+
+          <p class="resume-role">
+            Infrastructure Engineer /
+            Infrastructure Lead
+          </p>
+
+          <p class="resume-lead">
+            20+ years in IT. I design, implement and operate
+            multi-site production infrastructure across Linux,
+            virtualization, networking, storage, observability,
+            security and backup.
+          </p>
+        </div>
+
+        <aside class="resume-summary">
+          <div>
+            <span>Primary focus</span>
+            <strong>Infrastructure Engineering</strong>
+          </div>
+
+          <div>
+            <span>Responsibility</span>
+            <strong>Architecture → implementation → operations</strong>
+          </div>
+
+          <div>
+            <span>Working model</span>
+            <strong>Hands-on engineering + leadership</strong>
+          </div>
+
+          <div>
+            <span>Technical notes</span>
+            <a
+              href="https://runer.su"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Runer’s Lab ↗
+            </a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="resume-metrics">
+      <div class="container resume-metrics-grid">
+        <div>
+          <strong>20+</strong>
+          <span>years in IT</span>
+        </div>
+
+        <div>
+          <strong>40+</strong>
+          <span>production servers</span>
+        </div>
+
+        <div>
+          <strong>150+</strong>
+          <span>users</span>
+        </div>
+
+        <div>
+          <strong>Multi-site</strong>
+          <span>infrastructure</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="resume-section container">
+      <div class="resume-section-heading">
+        <span>01 / PROFILE</span>
+
+        <h2>
+          Infrastructure as one
+          operational system.
+        </h2>
+      </div>
+
+      <div class="resume-profile-copy">
+        <p>
+          I work at the intersection of hands-on engineering and
+          infrastructure ownership. My focus is complex heterogeneous
+          environments where Linux, virtualization, networking, storage,
+          observability and security must operate as one system.
+        </p>
+
+        <p>
+          I take ownership of the complete change lifecycle:
+          assessment, design, implementation, migration,
+          production handover, monitoring, documentation
+          and ongoing operations.
+        </p>
+      </div>
+    </section>
+
+    <section class="resume-section resume-section-alt">
+      <div class="container">
+        <div class="resume-section-heading">
+          <span>02 / EXPERTISE</span>
+
+          <h2>Core technical areas.</h2>
+        </div>
+
+        <div class="expertise-grid">
+          {
+            expertise.map((item) => (
+              <article class="expertise-card">
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+
+                <div class="tags">
+                  {item.tags.map((tag) => <span>{tag}</span>)}
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+
+    <section class="resume-section container">
+      <div class="resume-section-heading">
+        <span>03 / EXPERIENCE</span>
+
+        <h2>
+          More than 20 years
+          in infrastructure.
+        </h2>
+      </div>
+
+      <div class="experience-list">
+        {
+          experience.map((item, index) => (
+            <article
+              class:list={[
+                "experience-item",
+                { "experience-primary": index === 0 },
+              ]}
+            >
+              <div class="experience-meta">
+                <span class="experience-number">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                <span class="experience-period">
+                  {item.period}
+                </span>
+              </div>
+
+              <div class="experience-content">
+                <h3>{item.company}</h3>
+                <div class="experience-role">{item.role}</div>
+
+                {
+                  item.note && (
+                    <p class="experience-note">
+                      {item.note}
+                    </p>
+                  )
+                }
+
+                <ul>
+                  {
+                    item.bullets.map((bullet) => (
+                      <li>{bullet}</li>
+                    ))
+                  }
+                </ul>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="resume-section resume-section-alt">
+      <div class="container">
+        <div class="resume-section-heading">
+          <span>04 / SELECTED WORK</span>
+
+          <h2>Selected infrastructure work.</h2>
+        </div>
+
+        <div class="resume-projects">
+          {
+            projects.map((project) => (
+              <article class="resume-project">
+                <span>{project.number}</span>
+
+                <div>
+                  <h3>{project.title}</h3>
+                  <p>{project.text}</p>
+
+                  {
+                    project.href && (
+                      <a href={project.href}>
+                        View case study ↗
+                      </a>
+                    )
+                  }
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="resume-section container">
+      <div class="resume-section-heading">
+        <span>05 / TECHNOLOGIES</span>
+
+        <h2>Working stack.</h2>
+      </div>
+
+      <div class="stack-list">
+        {
+          stackGroups.map((group) => (
+            <div class="stack-row">
+              <span>{group.label}</span>
+              <strong>{group.value}</strong>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+
+    <section class="resume-section resume-section-alt">
+      <div class="container">
+        <div class="resume-section-heading">
+          <span>06 / EDUCATION & CERTIFICATIONS</span>
+
+          <h2>
+            Education and professional development.
+          </h2>
+        </div>
+
+        <div class="qualification-grid">
+          <div>
+            <span class="qualification-label">EDUCATION</span>
+
+            <div class="education-list">
+              {
+                education.map((item) => (
+                  <article class="education-item">
+                    <span>{item.year}</span>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.text}</p>
+                    </div>
+                  </article>
+                ))
+              }
+            </div>
+          </div>
+
+          <div>
+            <span class="qualification-label">
+              CERTIFICATIONS & COURSES
+            </span>
+
+            <div class="certification-list">
+              {
+                certifications.map((item) => (
+                  <div>{item}</div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="resume-contact">
+      <div class="container resume-contact-inner">
+        <div>
+          <span class="resume-index">07 / CONTACT</span>
+
+          <h2>
+            Infrastructure engineering,
+            operations and leadership.
+          </h2>
+        </div>
+
+        <div class="resume-contact-links">
+          <a
+            href="https://github.com/greksw"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub ↗
+          </a>
+
+          <a
+            href="https://runer.su"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Technical notes ↗
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter lang="en" />
+
+  <style>
+    .container {
+      width: min(calc(100% - 48px), var(--container));
+      margin-inline: auto;
+    }
+
+    .resume-hero {
+      padding-block: 110px 90px;
+    }
+
+    .resume-index,
+    .resume-section-heading > span {
+      color: var(--blue);
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .resume-hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 100px;
+      margin-top: 32px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 20px;
+      font-size: clamp(64px, 7vw, 104px);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+    }
+
+    .resume-role {
+      margin-bottom: 30px;
+      color: var(--muted-strong);
+      font-size: 23px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .resume-lead {
+      max-width: 760px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .resume-summary {
+      border-top: 1px solid var(--border-strong);
+    }
+
+    .resume-summary > div {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .resume-summary span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .resume-summary strong,
+    .resume-summary a {
+      font-size: 12px;
+    }
+
+    .resume-summary a {
+      color: var(--blue);
+    }
+
+    .resume-metrics {
+      border-block: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.012);
+    }
+
+    .resume-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .resume-metrics-grid > div {
+      display: flex;
+      min-height: 138px;
+      flex-direction: column;
+      justify-content: center;
+      padding: 30px;
+      border-left: 1px solid var(--border);
+    }
+
+    .resume-metrics-grid > div:last-child {
+      border-right: 1px solid var(--border);
+    }
+
+    .resume-metrics strong {
+      margin-bottom: 6px;
+      font-size: 27px;
+      letter-spacing: -0.03em;
+    }
+
+    .resume-metrics span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .resume-section {
+      padding-block: 88px;
+    }
+
+    .resume-section-alt {
+      padding-block: 88px;
+      border-block: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.012);
+    }
+
+    .resume-section-heading {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 50px;
+      margin-bottom: 55px;
+    }
+
+    .resume-section-heading h2,
+    .resume-contact h2 {
+      max-width: 780px;
+      margin-bottom: 0;
+      font-size: clamp(40px, 5vw, 64px);
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+    }
+
+    .resume-profile-copy {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+      margin-left: 290px;
+    }
+
+    .resume-profile-copy p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .expertise-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+
+    .expertise-card {
+      min-height: 280px;
+      padding: 30px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .expertise-card h3 {
+      margin-bottom: 14px;
+      font-size: 19px;
+    }
+
+    .expertise-card p {
+      min-height: 95px;
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tags span {
+      padding: 5px 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted-strong);
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        monospace;
+      font-size: 9px;
+    }
+
+    .scope-list {
+      margin-left: 290px;
+      border-top: 1px solid var(--border);
+    }
+
+    .scope-item {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 20px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .scope-item > span,
+    .resume-project > span {
+      color: var(--blue);
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        monospace;
+      font-size: 9px;
+    }
+
+    .scope-item p {
+      max-width: 820px;
+      margin-bottom: 0;
+      color: var(--muted-strong);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .resume-projects {
+      border-top: 1px solid var(--border);
+    }
+
+    .resume-project {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 30px;
+      padding: 30px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .resume-project h3 {
+      margin-bottom: 8px;
+      font-size: 21px;
+    }
+
+    .resume-project p {
+      max-width: 820px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .resume-project a {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stack-list {
+      margin-left: 290px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stack-row {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 30px;
+      padding: 21px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stack-row span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .stack-row strong {
+      color: var(--muted-strong);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .resume-contact {
+      padding-block: 88px;
+      border-top: 1px solid var(--border);
+    }
+
+    .resume-contact-inner {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 50px;
+    }
+
+    .resume-contact h2 {
+      margin-top: 22px;
+    }
+
+    .resume-contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 190px;
+    }
+
+    .resume-contact-links a {
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+
+    .experience-list {
+      border-top: 1px solid var(--border);
+    }
+
+    .experience-item {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 36px;
+      padding: 30px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .experience-primary {
+      padding-block: 36px;
+    }
+
+    .experience-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .experience-number {
+      color: var(--blue);
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        monospace;
+      font-size: 9px;
+    }
+
+    .experience-period {
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.6;
+    }
+
+    .experience-content h3 {
+      margin-bottom: 6px;
+      font-size: 22px;
+      letter-spacing: -0.025em;
+    }
+
+    .experience-role {
+      margin-bottom: 20px;
+      color: var(--muted-strong);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .experience-content ul {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .experience-content li {
+      padding-left: 4px;
+      font-size: 13.5px;
+      line-height: 1.68;
+    }
+
+    .experience-note {
+      max-width: 780px;
+      margin-bottom: 16px;
+      color: var(--blue);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .qualification-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+    }
+
+    .qualification-label {
+      display: block;
+      margin-bottom: 20px;
+      color: var(--blue);
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        monospace;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+    }
+
+    .education-list,
+    .certification-list {
+      border-top: 1px solid var(--border);
+    }
+
+    .education-item {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 18px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .education-item > span {
+      color: var(--blue);
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        monospace;
+      font-size: 10px;
+    }
+
+    .education-item h3 {
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .education-item p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .certification-list > div {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted-strong);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 980px) {
+      .resume-hero-grid,
+      .resume-profile-copy {
+        grid-template-columns: 1fr;
+      }
+
+      .resume-hero-grid {
+        gap: 55px;
+      }
+
+      .resume-profile-copy,
+      .scope-list,
+      .stack-list {
+        margin-left: 0;
+      }
+
+      .expertise-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .resume-section-heading {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+    }
+
+    @media (max-width: 640px) {
+
+      .experience-item {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .experience-meta {
+        gap: 7px;
+      }
+
+      .experience-content h3 {
+        font-size: 20px;
+      }
+
+      .qualification-grid {
+        grid-template-columns: 1fr;
+        gap: 55px;
+      }
+
+      .container {
+        width: min(calc(100% - 30px), var(--container));
+      }
+
+      .resume-hero {
+        padding-block: 70px;
+      }
+
+      h1 {
+        font-size: clamp(46px, 15vw, 64px);
+      }
+
+      .resume-role {
+        font-size: 19px;
+      }
+
+      .resume-lead {
+        font-size: 15px;
+      }
+
+      .resume-metrics-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .resume-metrics-grid > div {
+        min-height: 115px;
+        padding: 22px 18px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .resume-section,
+      .resume-section-alt,
+      .resume-contact {
+        padding-block: 78px;
+      }
+
+      .resume-section-heading h2,
+      .resume-contact h2 {
+        font-size: clamp(32px, 10vw, 42px);
+      }
+
+      .expertise-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .expertise-card {
+        min-height: auto;
+        padding: 25px 22px;
+      }
+
+      .expertise-card p {
+        min-height: auto;
+      }
+
+      .scope-item {
+        grid-template-columns: 35px minmax(0, 1fr);
+        gap: 12px;
+      }
+
+      .resume-project {
+        grid-template-columns: 32px minmax(0, 1fr);
+        gap: 15px;
+      }
+
+      .stack-row {
+        grid-template-columns: 1fr;
+        gap: 7px;
+      }
+
+      .resume-contact-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</BaseLayout>

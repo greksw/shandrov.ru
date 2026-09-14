@@ -26,12 +26,15 @@ const enHref =
       : `/en${pathname}`;
 
 const homeHref = isRu ? "/" : "/en/";
+const resumeHref = isRu ? "/resume/" : "/en/resume/";
+const isResume = pathname === "/resume/" || pathname === "/en/resume/";
 
 const labels = isRu
   ? {
       expertise: "Экспертиза",
       projects: "Проекты",
       about: "Обо мне",
+      resume: "Резюме",
       notes: "Заметки",
       home: "Главная Tudor Shandrov",
     }
@@ -39,6 +42,7 @@ const labels = isRu
       expertise: "Expertise",
       projects: "Projects",
       about: "About",
+      resume: "Resume",
       notes: "Notes",
       home: "Tudor Shandrov home",
     };
@@ -72,6 +76,14 @@ const labels = isRu
 
       <a href={`${homeHref}#about`}>
         {labels.about}
+      </a>
+
+      <a
+        href={resumeHref}
+        aria-current={isResume ? "page" : undefined}
+        class:list={{ active: isResume }}
+      >
+        {labels.resume}
       </a>
 
       <a
