@@ -1,0 +1,1052 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import SiteHeader from "../../../../components/SiteHeader.astro";
+import SiteFooter from "../../../../components/SiteFooter.astro";
+
+const responsibilities = [
+  "Virtualization platform architecture",
+  "Operation of Proxmox VE clusters",
+  "Storage plane design",
+  "HA, quorum and live migration",
+  "Backup with Proxmox Backup Server",
+  "Updates and maintenance procedures",
+  "Monitoring and troubleshooting",
+  "Documentation and operational runbooks",
+];
+
+const outcomes = [
+  {
+    value: "9 nodes",
+    label: "primary production cluster",
+  },
+  {
+    value: "3 nodes",
+    label: "additional Proxmox + Ceph platform",
+  },
+  {
+    value: "Dedicated",
+    label: "PBS backup platform",
+  },
+];
+---
+
+<BaseLayout
+  title="Proxmox & Ceph Platform — Tudor Shandrov"
+  description="Tudor Shandrov case study on operating and evolving a production Proxmox VE and Ceph platform: HA, live migration, storage, PBS, monitoring and maintenance."
+  lang="en"
+>
+  <div class="page-glow"></div>
+  <SiteHeader lang="en" />
+
+  <main>
+    <section class="hero container">
+      <a class="back" href="/en/#projects">
+        ← Projects
+      </a>
+
+      <div class="hero-grid">
+        <div>
+          <span class="index">
+            CASE STUDY / 02
+          </span>
+
+          <h1>
+            Proxmox & Ceph
+            <span>Platform.</span>
+          </h1>
+
+          <p class="lead">
+            Operation and evolution of a production virtualization platform:
+            clustered compute, distributed storage, high availability,
+            backup and controlled maintenance.
+          </p>
+        </div>
+
+        <aside class="summary">
+          <div>
+            <span>Role</span>
+            <strong>
+              Lead Infrastructure Engineer
+            </strong>
+          </div>
+
+          <div>
+            <span>Scope</span>
+            <strong>
+              Multiple production sites
+            </strong>
+          </div>
+
+          <div>
+            <span>Operating model</span>
+            <strong>
+              Architecture → operations → evolution
+            </strong>
+          </div>
+
+          <div>
+            <span>Disclosure</span>
+            <strong>
+              Architecture anonymized
+            </strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="metrics">
+      <div class="container metrics-grid">
+        {
+          outcomes.map((item) => (
+            <div class="metric">
+              <strong>{item.value}</strong>
+              <span>{item.label}</span>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-number">
+        01 / CONTEXT
+      </div>
+
+      <div class="two-column">
+        <h2>
+          Virtualization as a
+          production platform,
+          not a collection of hypervisors.
+        </h2>
+
+        <div class="copy">
+          <p>
+            As the infrastructure grew, virtualization requirements
+            moved beyond individual hosts. Production workloads needed
+            predictable availability, manageable storage, reliable
+            backup and the ability to maintain the platform without
+            unnecessary downtime.
+          </p>
+
+          <p>
+            Compute, storage, cluster control, backup, networking
+            and monitoring therefore had to be treated as parts of one
+            operational platform. Changes at any layer needed to account
+            for their impact on the others.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark">
+      <div class="container">
+        <div class="section-number">
+          02 / RESPONSIBILITY
+        </div>
+
+        <div class="two-column">
+          <h2>
+            Responsibility across the
+            platform lifecycle.
+          </h2>
+
+          <div class="responsibility-grid">
+            {
+              responsibilities.map((item, index) => (
+                <div class="responsibility">
+                  <span>
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <strong>{item}</strong>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-number">
+        03 / ARCHITECTURE
+      </div>
+
+      <div class="two-column architecture-heading">
+        <h2>
+          The platform is separated into
+          connected operational planes.
+        </h2>
+
+        <p>
+          The diagram is intentionally abstracted. It shows functional
+          platform layers without exposing customer addressing, node names,
+          site topology or internal security details.
+        </p>
+      </div>
+
+      <div class="architecture">
+        <div class="architecture-row">
+          <div class="arch-node accent">
+            <span>NETWORK PLANES</span>
+            <strong>Platform traffic separation</strong>
+            <small>
+              Management · production · storage · backup
+            </small>
+          </div>
+        </div>
+
+        <div class="branch-connector">
+          <span class="branch-stem"></span>
+          <span class="branch-bus"></span>
+          <span class="branch-drop branch-drop-left"></span>
+          <span class="branch-drop branch-drop-center"></span>
+          <span class="branch-drop branch-drop-right"></span>
+        </div>
+
+        <div class="architecture-row architecture-three">
+          <div class="arch-node">
+            <span>COMPUTE</span>
+            <strong>Proxmox VE clusters</strong>
+            <small>
+              HA · live migration
+            </small>
+          </div>
+
+          <div class="arch-node">
+            <span>STORAGE</span>
+            <strong>Distributed storage</strong>
+            <small>
+              Ceph · NFS
+            </small>
+          </div>
+
+          <div class="arch-node">
+            <span>BACKUP</span>
+            <strong>Dedicated PBS platform</strong>
+            <small>
+              Backup · retention · restore
+            </small>
+          </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="architecture-row architecture-three">
+          <div class="arch-node">
+            <span>CLUSTER CONTROL</span>
+            <strong>Quorum and HA</strong>
+            <small>
+              Corosync · HA manager
+            </small>
+          </div>
+
+          <div class="arch-node">
+            <span>OBSERVABILITY</span>
+            <strong>Platform monitoring</strong>
+            <small>
+              Metrics · events · alerting
+            </small>
+          </div>
+
+          <div class="arch-node">
+            <span>OPERATIONS</span>
+            <strong>Controlled maintenance</strong>
+            <small>
+              Updates · maintenance · runbooks
+            </small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark">
+      <div class="container">
+        <div class="section-number">
+          04 / HIGH AVAILABILITY
+        </div>
+
+        <div class="delivery">
+          <article>
+            <span>01</span>
+            <h3>Quorum</h3>
+            <p>
+              Cluster state and quorum are treated as baseline conditions
+              for safe changes and node maintenance.
+            </p>
+          </article>
+
+          <article>
+            <span>02</span>
+            <h3>HA</h3>
+            <p>
+              Critical workloads are placed with HA capabilities
+              and service recovery requirements in mind.
+            </p>
+          </article>
+
+          <article>
+            <span>03</span>
+            <h3>Live migration</h3>
+            <p>
+              Workloads are moved between nodes for maintenance,
+              load redistribution and planned infrastructure work.
+            </p>
+          </article>
+
+          <article>
+            <span>04</span>
+            <h3>Maintenance</h3>
+            <p>
+              Work follows a controlled sequence: verify platform health,
+              migrate workloads, maintain the node and validate the cluster
+              after returning it to service.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-number">
+        05 / STORAGE & BACKUP
+      </div>
+
+      <div class="two-column">
+        <h2>
+          Storage and backup are
+          different protection layers.
+        </h2>
+
+        <div class="copy">
+          <p>
+            Ceph is used as a distributed storage layer where cluster-aware
+            data availability is required. Separate file-based storage
+            services are used where they are operationally more appropriate.
+          </p>
+
+          <p>
+            Backup is separated into a dedicated PBS plane. This decouples
+            production-storage availability from recovery after operator
+            error, data corruption or other incidents, while allowing
+            retention policies to be managed independently.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark">
+      <div class="container">
+        <div class="section-number">
+          06 / OPERATIONS
+        </div>
+
+        <div class="two-column">
+          <h2>
+            Reliability depends on
+            operations as much as architecture.
+          </h2>
+
+          <div class="copy">
+            <p>
+              The platform requires continuous operational work:
+              updates, cluster-health verification, storage monitoring,
+              backup-job control, incident analysis and maintenance planning.
+            </p>
+
+            <p>
+              Changes are performed with platform health checks and a rollback
+              path in mind. Repeatable procedures are captured in documentation
+              and runbooks so that maintenance does not depend on one
+              engineer's memory.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="result">
+      <div class="container result-grid">
+        <span class="section-number">
+          07 / RESULT
+        </span>
+
+        <h2>
+          A manageable
+          production platform
+          for virtual
+          workloads.
+        </h2>
+
+        <p>
+          Virtualization, distributed storage, HA, backup, network planes
+          and monitoring operate as one system. This makes the platform
+          predictable to maintain and allows it to evolve without becoming
+          a collection of independent infrastructure components.
+        </p>
+
+        <a href="/en/#projects">
+          ← Back to projects
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter lang="en" />
+
+<style is:global>
+      :root {
+        color-scheme: dark;
+
+        --bg: #0b0f14;
+        --surface: #121920;
+        --surface-2: #151e27;
+        --border: rgba(255, 255, 255, 0.09);
+        --border-strong: rgba(255, 255, 255, 0.15);
+
+        --text: #f2f5f7;
+        --muted: #9aa7b4;
+        --muted-strong: #c1cad3;
+
+        --blue: #5b8cff;
+        --cyan: #52d3c5;
+
+        --container: 1180px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--bg);
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+
+        color: var(--text);
+
+        background:
+          linear-gradient(
+            rgba(255, 255, 255, 0.018) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.018) 1px,
+            transparent 1px
+          ),
+          var(--bg);
+
+        background-size: 48px 48px;
+
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(
+          calc(100% - 48px),
+          var(--container)
+        );
+
+        margin-inline: auto;
+      }
+
+      .page-glow {
+        position: fixed;
+        z-index: -1;
+        top: -250px;
+        right: -200px;
+
+        width: 600px;
+        height: 600px;
+
+        border-radius: 50%;
+
+        background: var(--blue);
+
+        opacity: 0.08;
+        filter: blur(150px);
+      }
+
+      .hero {
+        padding-block: 92px 110px;
+      }
+
+      .back {
+        display: inline-block;
+
+        margin-bottom: 72px;
+
+        color: var(--muted);
+
+        font-size: 12px;
+      }
+
+      .hero-grid,
+      .two-column {
+        display: grid;
+        grid-template-columns:
+          minmax(0, 1.2fr)
+          minmax(320px, 0.8fr);
+
+        gap: 90px;
+      }
+
+      .index,
+      .section-number {
+        display: block;
+
+        margin-bottom: 22px;
+
+        color: var(--blue);
+
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+
+        font-size: 10px;
+        letter-spacing: 0.13em;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 690px;
+
+        margin-bottom: 30px;
+
+        font-size:
+          clamp(52px, 7vw, 82px);
+
+        line-height: 0.96;
+        letter-spacing: -0.055em;
+      }
+
+      h1 span {
+        display: block;
+
+        color: var(--muted);
+
+        font-weight: 500;
+      }
+
+      .lead {
+        max-width: 720px;
+
+        margin-bottom: 0;
+
+        color: var(--muted-strong);
+
+        font-size: 18px;
+        line-height: 1.7;
+      }
+
+      .summary {
+        align-self: end;
+
+        border-top:
+          1px solid var(--border-strong);
+      }
+
+      .summary > div {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        padding: 17px 0;
+
+        border-bottom:
+          1px solid var(--border);
+      }
+
+      .summary span {
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .summary strong {
+        font-size: 12px;
+      }
+
+      .metrics {
+        border-block:
+          1px solid var(--border);
+
+        background:
+          rgba(255, 255, 255, 0.012);
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns:
+          repeat(3, 1fr);
+      }
+
+      .metric {
+        display: flex;
+        min-height: 140px;
+
+        flex-direction: column;
+        justify-content: center;
+
+        padding: 30px;
+
+        border-right:
+          1px solid var(--border);
+      }
+
+      .metric:first-child {
+        border-left:
+          1px solid var(--border);
+      }
+
+      .metric strong {
+        margin-bottom: 5px;
+
+        font-size: 25px;
+        letter-spacing: -0.035em;
+      }
+
+      .metric span {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .section {
+        padding-block: 110px;
+      }
+
+      .section-dark {
+        border-block:
+          1px solid var(--border);
+
+        background:
+          rgba(255, 255, 255, 0.012);
+      }
+
+      .two-column h2,
+      .result h2 {
+        max-width: 650px;
+
+        margin-bottom: 0;
+
+        font-size:
+          clamp(36px, 4.5vw, 54px);
+
+        line-height: 1.08;
+        letter-spacing: -0.045em;
+      }
+
+      .copy p,
+      .architecture-heading p,
+      .result p {
+        color: var(--muted);
+
+        font-size: 14px;
+        line-height: 1.8;
+      }
+
+      .copy p:last-child {
+        margin-bottom: 0;
+      }
+
+      .responsibility-grid {
+        display: grid;
+        grid-template-columns:
+          1fr 1fr;
+
+        border-top:
+          1px solid var(--border);
+      }
+
+      .responsibility {
+        display: flex;
+        min-height: 92px;
+
+        gap: 15px;
+        align-items: center;
+
+        padding: 18px;
+
+        border-right:
+          1px solid var(--border);
+        border-bottom:
+          1px solid var(--border);
+      }
+
+      .responsibility span {
+        color: var(--blue);
+
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+
+        font-size: 9px;
+      }
+
+      .responsibility strong {
+        font-size: 12px;
+      }
+
+      .architecture-heading {
+        align-items: end;
+
+        margin-bottom: 52px;
+      }
+
+      .architecture-heading p {
+        max-width: 420px;
+        margin-bottom: 0;
+      }
+
+      .architecture {
+        padding: 42px;
+
+        border: 1px solid var(--border-strong);
+        border-radius: 20px;
+
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255,255,255,.03),
+            transparent
+          ),
+          var(--surface);
+      }
+
+      .architecture-row {
+        display: flex;
+        justify-content: center;
+      }
+
+      .architecture-three {
+        display: grid;
+        grid-template-columns:
+          repeat(3, 1fr);
+
+        gap: 16px;
+      }
+
+      .arch-node {
+        display: flex;
+
+        min-height: 135px;
+
+        flex-direction: column;
+        justify-content: center;
+
+        padding: 22px;
+
+        border:
+          1px solid var(--border);
+
+        border-radius: 12px;
+
+        background:
+          rgba(11,15,20,.65);
+      }
+
+      .arch-node.accent {
+        width: min(100%, 500px);
+
+        border-color:
+          rgba(91,140,255,.35);
+
+        background:
+          rgba(91,140,255,.07);
+      }
+
+      .arch-node span {
+        margin-bottom: 11px;
+
+        color: var(--blue);
+
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+
+        font-size: 9px;
+        letter-spacing: .11em;
+      }
+
+      .arch-node strong {
+        margin-bottom: 7px;
+
+        font-size: 15px;
+      }
+
+      .arch-node small {
+        color: var(--muted);
+
+        font-size: 11px;
+      }
+
+      .connector {
+        width: 1px;
+        height: 34px;
+
+        margin-inline: auto;
+
+        background:
+          linear-gradient(
+            var(--blue),
+            rgba(91,140,255,.15)
+          );
+      }
+
+
+
+      .delivery {
+        display: grid;
+        grid-template-columns:
+          repeat(4, 1fr);
+
+        border-top:
+          1px solid var(--border);
+        border-left:
+          1px solid var(--border);
+      }
+
+      .delivery article {
+        min-height: 270px;
+
+        padding: 28px;
+
+        border-right:
+          1px solid var(--border);
+        border-bottom:
+          1px solid var(--border);
+      }
+
+      .delivery article > span {
+        display: block;
+
+        margin-bottom: 65px;
+
+        color: var(--blue);
+
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+
+        font-size: 9px;
+      }
+
+      .delivery h3 {
+        margin-bottom: 14px;
+
+        font-size: 17px;
+      }
+
+      .delivery p {
+        margin-bottom: 0;
+
+        color: var(--muted);
+
+        font-size: 12px;
+        line-height: 1.7;
+      }
+
+      .result {
+        padding-block: 110px;
+
+        border-top:
+          1px solid var(--border);
+
+        background:
+          linear-gradient(
+            135deg,
+            rgba(91,140,255,.08),
+            transparent 45%
+          );
+      }
+
+      .result-grid {
+        display: grid;
+        grid-template-columns:
+          0.35fr 1.4fr 0.75fr;
+
+        gap: 55px;
+        align-items: start;
+      }
+
+      .result p {
+        margin-bottom: 0;
+      }
+
+      .result a {
+        grid-column: 2;
+
+        width: max-content;
+
+        margin-top: 12px;
+
+        color: var(--blue);
+
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+
+
+        .hero-grid,
+        .two-column,
+        .result-grid {
+          grid-template-columns: 1fr;
+          gap: 45px;
+        }
+
+        .metrics-grid,
+        .architecture-three {
+          grid-template-columns: 1fr;
+        }
+
+        .metric {
+          border-bottom:
+            1px solid var(--border);
+          border-left:
+            1px solid var(--border);
+        }
+
+        .responsibility-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .delivery {
+          grid-template-columns:
+            repeat(2, 1fr);
+        }
+
+        .result a {
+          grid-column: 1;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          width:
+            min(calc(100% - 30px), var(--container));
+        }
+
+        .hero {
+          padding-block: 65px 80px;
+        }
+
+        .back {
+          margin-bottom: 50px;
+        }
+
+        h1 {
+          font-size:
+            clamp(34px, 10.8vw, 48px);
+          line-height: 1.02;
+          overflow-wrap: anywhere;
+        }
+
+        .section {
+          padding-block: 80px;
+        }
+
+        .architecture {
+          padding: 16px;
+        }
+
+        .summary strong,
+        .arch-node strong,
+        .arch-node small {
+          overflow-wrap: anywhere;
+        }
+
+        .delivery {
+          grid-template-columns: 1fr;
+        }
+
+
+      }
+
+
+      .branch-connector {
+          position: relative;
+          z-index: 3;
+          width: 66.666%;
+          height: 54px;
+          margin-inline: auto;
+        }
+
+        .branch-stem {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 1px;
+          height: 27px;
+          background: rgba(91, 140, 255, 0.7);
+        }
+
+        .branch-bus {
+          position: absolute;
+          top: 26px;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: rgba(91, 140, 255, 0.55);
+        }
+
+        .branch-drop {
+          position: absolute;
+          top: 26px;
+          width: 1px;
+          height: 28px;
+          background: rgba(91, 140, 255, 0.55);
+        }
+
+        .branch-drop-left {
+          left: 0;
+        }
+
+        .branch-drop-center {
+          left: 50%;
+        }
+
+        .branch-drop-right {
+          right: 0;
+        }
+
+        @media (max-width: 900px) {
+          .branch-connector {
+            display: none;
+          }
+        }
+    </style>
+</BaseLayout>
