@@ -245,6 +245,14 @@ const stackGroups = [
           </div>
         </aside>
       </div>
+
+      <div class="resume-print-links">
+        <span>shandrov.ru</span>
+        <span>·</span>
+        <span>github.com/greksw</span>
+        <span>·</span>
+        <span>runer.su</span>
+      </div>
     </section>
 
     <section class="resume-metrics">
@@ -298,7 +306,7 @@ const stackGroups = [
       </div>
     </section>
 
-    <section class="resume-section resume-section-alt">
+    <section id="resume-expertise" class="resume-section resume-section-alt resume-expertise-section">
       <div class="container">
         <div class="resume-section-heading">
           <span>02 / EXPERTISE</span>
@@ -324,7 +332,7 @@ const stackGroups = [
     </section>
 
 
-    <section class="resume-section container">
+    <section id="resume-experience" class="resume-section container">
       <div class="resume-section-heading">
         <span>03 / EXPERIENCE</span>
 
@@ -379,7 +387,7 @@ const stackGroups = [
       </div>
     </section>
 
-    <section class="resume-section resume-section-alt">
+    <section id="resume-projects" class="resume-section resume-section-alt resume-project-section print-hidden">
       <div class="container">
         <div class="resume-section-heading">
           <span>04 / SELECTED WORK</span>
@@ -412,7 +420,7 @@ const stackGroups = [
       </div>
     </section>
 
-    <section class="resume-section container">
+    <section id="resume-technologies" class="resume-section container print-hidden">
       <div class="resume-section-heading">
         <span>05 / TECHNOLOGIES</span>
 
@@ -478,7 +486,7 @@ const stackGroups = [
       </div>
     </section>
 
-    <section class="resume-contact">
+    <section class="resume-contact print-hidden">
       <div class="container resume-contact-inner">
         <div>
           <span class="resume-index">07 / CONTACT</span>
@@ -596,6 +604,10 @@ const stackGroups = [
 
     .resume-summary a {
       color: var(--blue);
+    }
+
+    .resume-print-links {
+      display: none;
     }
 
     .resume-metrics {
@@ -1088,6 +1100,429 @@ const stackGroups = [
       .resume-contact-inner {
         align-items: flex-start;
         flex-direction: column;
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 12mm 14mm;
+      }
+
+      :global(html),
+      :global(body) {
+        background: #fff !important;
+        color: #111 !important;
+      }
+
+      :global(body) {
+        font-size: 10pt;
+        line-height: 1.45;
+      }
+
+      :global(.site-header),
+      :global(.site-footer) {
+        display: none !important;
+      }
+
+      .container {
+        width: 100%;
+        max-width: none;
+      }
+
+      .resume-hero {
+        padding: 0 0 12mm;
+      }
+
+      .resume-hero-grid {
+        grid-template-columns: 1.3fr 0.7fr;
+        gap: 12mm;
+        margin-top: 6mm;
+      }
+
+      h1 {
+        margin-bottom: 4mm;
+        color: #111;
+        font-size: 32pt;
+        line-height: 0.95;
+      }
+
+      .resume-role {
+        margin-bottom: 5mm;
+        color: #222;
+        font-size: 14pt;
+      }
+
+      .resume-lead {
+        color: #333;
+        font-size: 9.5pt;
+        line-height: 1.55;
+      }
+
+      .resume-index,
+      .resume-section-heading > span,
+      .experience-number,
+      .qualification-label,
+      .education-item > span,
+      .resume-project > span {
+        color: #315fb8 !important;
+      }
+
+      .resume-summary {
+        border-color: #bbb;
+      }
+
+      .resume-summary > div {
+        padding: 3.5mm 0;
+        border-color: #ddd;
+      }
+
+      .resume-summary span,
+      .resume-metrics span,
+      .stack-row span,
+      .experience-period,
+      .education-item p {
+        color: #555;
+      }
+
+      .resume-summary strong,
+      .resume-summary a,
+      .resume-project a,
+      .resume-contact-links a {
+        color: #111;
+      }
+
+      .resume-metrics {
+        border-color: #bbb;
+        background: none;
+      }
+
+      .resume-metrics-grid > div {
+        min-height: 0;
+        padding: 6mm;
+        border-color: #ddd;
+      }
+
+      .resume-metrics strong {
+        font-size: 16pt;
+      }
+
+      .resume-section,
+      .resume-section-alt,
+      .resume-contact {
+        padding-block: 9mm;
+        border-color: #bbb;
+        background: none;
+      }
+
+      .resume-section-heading {
+        grid-template-columns: 38mm 1fr;
+        gap: 8mm;
+        margin-bottom: 7mm;
+      }
+
+      .resume-section-heading h2,
+      .resume-contact h2 {
+        color: #111;
+        font-size: 22pt;
+        line-height: 1.05;
+      }
+
+      .resume-profile-copy {
+        gap: 8mm;
+        margin-left: 46mm;
+      }
+
+      .resume-profile-copy p {
+        color: #333;
+        font-size: 9pt;
+        line-height: 1.55;
+      }
+
+      .expertise-grid {
+        grid-template-columns: repeat(3, 1fr);
+        border-color: #bbb;
+      }
+
+      .expertise-card {
+        min-height: 0;
+        padding: 5mm;
+        border-color: #ddd;
+        break-inside: avoid;
+      }
+
+      .expertise-card h3 {
+        color: #111;
+        font-size: 11pt;
+      }
+
+      .expertise-card p {
+        min-height: 0;
+        color: #444;
+        font-size: 8.5pt;
+        line-height: 1.5;
+      }
+
+      .tags span {
+        border-color: #bbb;
+        color: #333;
+      }
+
+      .experience-item {
+        grid-template-columns: 42mm 1fr;
+        gap: 7mm;
+        padding: 5mm 0;
+        border-color: #ddd;
+        break-inside: avoid;
+      }
+
+      .experience-primary {
+        padding-block: 6mm;
+      }
+
+      .experience-content h3 {
+        color: #111;
+        font-size: 12pt;
+      }
+
+      .experience-role {
+        margin-bottom: 3mm;
+        color: #222;
+        font-size: 9pt;
+      }
+
+      .experience-content ul {
+        gap: 1.5mm;
+        color: #333;
+      }
+
+      .experience-content li {
+        font-size: 8.5pt;
+        line-height: 1.45;
+      }
+
+      .experience-note {
+        color: #315fb8;
+        font-size: 8pt;
+      }
+
+      .resume-project {
+        padding: 4mm 0;
+        border-color: #ddd;
+        break-inside: avoid;
+      }
+
+      .resume-project h3 {
+        color: #111;
+        font-size: 11pt;
+      }
+
+      .resume-project p {
+        color: #444;
+        font-size: 8.5pt;
+      }
+
+      .stack-list {
+        margin-left: 46mm;
+      }
+
+      .stack-row {
+        padding: 3mm 0;
+        border-color: #ddd;
+      }
+
+      .stack-row strong {
+        color: #222;
+        font-size: 8.5pt;
+      }
+
+      .qualification-grid {
+        gap: 10mm;
+      }
+
+      .education-item,
+      .certification-list > div {
+        border-color: #ddd;
+      }
+
+      .education-item {
+        padding: 4mm 0;
+      }
+
+      .certification-list > div {
+        padding: 3mm 0;
+        color: #333;
+        font-size: 8.5pt;
+      }
+
+      .resume-contact {
+        display: none !important;
+      }
+
+      .resume-print-links {
+        display: flex;
+        gap: 3mm;
+        margin-top: 6mm;
+        padding-top: 4mm;
+        border-top: 1px solid #ddd;
+        color: #555;
+        font-size: 8pt;
+      }
+
+      .resume-contact-inner {
+        align-items: flex-start;
+      }
+
+      .resume-contact-links {
+        min-width: 42mm;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .resume-section,
+      .resume-section-alt,
+      .experience-item,
+      .expertise-card,
+      .resume-project,
+      .qualification-grid {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+
+    @media print {
+      /*
+       * Page 1 ends cleanly after profile.
+       * Expertise begins at the top of page 2.
+       */
+      .resume-expertise-section {
+        break-before: page;
+        page-break-before: always;
+      }
+
+      /*
+       * Selected Work is useful on the web CV but redundant in
+       * the printable CV because Experience already describes
+       * the work and shandrov.ru is printed on page 1.
+       */
+      .resume-project-section {
+        display: none !important;
+      }
+
+      /*
+       * Do not print the large web contact CTA.
+       * Compact URLs are already printed in the hero.
+       */
+      :global(.resume-contact),
+      section.resume-contact {
+        display: none !important;
+      }
+
+      /*
+       * Reduce vertical space slightly without changing web CSS.
+       */
+      .resume-section,
+      .resume-section-alt {
+        padding-block: 7mm;
+      }
+
+      .resume-section-heading {
+        margin-bottom: 5mm;
+      }
+
+      .stack-row {
+        padding-block: 2.4mm;
+      }
+
+      .certification-list > div {
+        padding-block: 2.3mm;
+      }
+    }
+
+    @media print {
+      /*
+       * Explicit global selectors: these IDs must survive
+       * Astro scoped CSS unchanged.
+       */
+      :global(#resume-expertise) {
+        break-before: page !important;
+        page-break-before: always !important;
+      }
+
+      :global(#resume-projects) {
+        display: none !important;
+      }
+
+      :global(#resume-contact),
+      :global(section.resume-contact) {
+        display: none !important;
+      }
+    }
+
+    @media print {
+      /*
+       * The detailed stack is already represented in Expertise.
+       * Keep it on the web CV, omit it from the printable CV.
+       */
+      :global(#resume-technologies) {
+        display: none !important;
+      }
+
+      /*
+       * Compact qualifications enough to keep the final part
+       * of the CV together without changing the web layout.
+       */
+      .qualification-grid {
+        gap: 7mm;
+      }
+
+      .education-item {
+        padding-block: 2.8mm;
+      }
+
+      .education-item h3 {
+        margin-bottom: 1mm;
+      }
+
+      .education-item p {
+        font-size: 8pt;
+        line-height: 1.45;
+      }
+
+      .certification-list > div {
+        padding-block: 1.9mm;
+        font-size: 8pt;
+        line-height: 1.4;
+      }
+
+      .qualification-label {
+        margin-bottom: 3mm;
+      }
+    }
+
+    @media print {
+      #resume-experience {
+        break-before: page;
+        page-break-before: always;
+        padding-top: 0;
+      }
+
+      #resume-experience .resume-section-heading {
+        margin-bottom: 4mm;
+      }
+
+      #resume-experience .experience-item {
+        padding-block: 4mm;
+      }
+
+      #resume-experience .experience-primary {
+        padding-block: 4.5mm;
+      }
+
+      #resume-experience .experience-content li {
+        line-height: 1.4;
       }
     }
   </style>

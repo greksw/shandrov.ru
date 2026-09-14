@@ -304,3 +304,44 @@ a {
   color: var(--text);
   font-weight: 700;
 }
+
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+}
+
+/* Resume PDF: keep Experience heading with the experience section. */
+@media print {
+  #resume-experience {
+    break-before: page !important;
+    page-break-before: always !important;
+    padding-top: 0 !important;
+  }
+
+  #resume-experience .resume-section-heading {
+    margin-bottom: 4mm !important;
+    break-after: avoid-page !important;
+    page-break-after: avoid !important;
+  }
+
+  #resume-experience .resume-section-heading h2 {
+    font-size: 18pt !important;
+    line-height: 1.02 !important;
+  }
+
+  #resume-experience .experience-item {
+    padding-top: 3.2mm !important;
+    padding-bottom: 3.2mm !important;
+  }
+
+  #resume-experience .experience-primary {
+    padding-top: 3.8mm !important;
+    padding-bottom: 3.8mm !important;
+  }
+
+  #resume-experience .experience-content li {
+    line-height: 1.36 !important;
+  }
+}
+
