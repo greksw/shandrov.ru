@@ -84,6 +84,7 @@ const projects = [
     <link rel="icon" href="/favicon.ico" />
 
     <title>Tudor Shandrov — Infrastructure Engineer</title>
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
   </head>
 
   <body>
@@ -101,7 +102,7 @@ const projects = [
           <a href="#expertise">Expertise</a>
           <a href="#projects">Projects</a>
           <a href="#about">About</a>
-          <a href="https://runer.su" target="_blank" rel="noreferrer">Lab</a>
+          <a href="https://runer.su" target="_blank" rel="noreferrer">Notes</a>
         </nav>
 
         <a
@@ -121,16 +122,16 @@ const projects = [
         <div class="hero-copy">
           <div class="eyebrow">
             <span class="status-dot"></span>
-            Infrastructure Engineering
+            Infrastructure Engineer / Infrastructure Lead
           </div>
 
           <h1>
-            Building infrastructure
-            <span>that stays operational.</span>
+            Building reliable infrastructure
+            <span>for production.</span>
           </h1>
 
           <p class="hero-lead">
-            I design, modernize and operate production IT infrastructure
+            Designing, modernizing and operating production infrastructure
             across Linux, virtualization, networks, observability and security.
           </p>
 
@@ -260,7 +261,7 @@ const projects = [
                   <div class="card-icon">
                     <span></span>
                   </div>
-                  <span class="card-arrow">↗</span>
+                  
                 </div>
 
                 <h3>{item.title}</h3>
@@ -302,7 +303,7 @@ const projects = [
                     <span class="project-stack">{project.stack}</span>
                   </div>
 
-                  <span class="project-arrow">↗</span>
+                  
                 </article>
               ))
             }
@@ -353,7 +354,7 @@ const projects = [
             <div class="about-field">
               <span>Technical notes</span>
               <a href="https://runer.su" target="_blank" rel="noreferrer">
-                Runer's Lab ↗
+                Runer's Lab — Infrastructure Notes ↗
               </a>
             </div>
           </div>
@@ -364,7 +365,7 @@ const projects = [
         <div class="container contact-inner">
           <div>
             <span class="section-index">04 / CONTACT</span>
-            <h2>Need infrastructure that can survive production?</h2>
+            <h2>Infrastructure engineering — from architecture to operations.</h2>
           </div>
 
           <div class="contact-actions">
@@ -393,8 +394,12 @@ const projects = [
     <footer class="footer">
       <div class="container footer-inner">
         <span>© {new Date().getFullYear()} Tudor Shandrov</span>
-        <span>Infrastructure Engineering</span>
-        <span>shandrov.ru</span>
+        <span>Infrastructure Engineer / Infrastructure Lead</span>
+        <div class="footer-links">
+          <a href="/privacy/">Privacy</a>
+          <span class="footer-separator">·</span>
+          <span>shandrov.ru</span>
+        </div>
       </div>
     </footer>
 
@@ -410,8 +415,8 @@ const projects = [
         --border-strong: rgba(255, 255, 255, 0.14);
 
         --text: #f2f5f7;
-        --muted: #8d99a6;
-        --muted-strong: #b2bcc6;
+        --muted: #9aa7b4;
+        --muted-strong: #c1cad3;
 
         --blue: #5b8cff;
         --blue-soft: rgba(91, 140, 255, 0.12);
@@ -902,7 +907,11 @@ const projects = [
       }
 
       .section {
-        padding-block: 120px;
+        padding-block: 100px;
+      }
+
+      section[id] {
+        scroll-margin-top: 100px;
       }
 
       .section-heading {
@@ -910,7 +919,7 @@ const projects = [
         grid-template-columns: 1.25fr 0.75fr;
         gap: 80px;
         align-items: end;
-        margin-bottom: 58px;
+        margin-bottom: 46px;
       }
 
       .section-index {
@@ -947,7 +956,7 @@ const projects = [
       }
 
       .expertise-card {
-        min-height: 315px;
+        min-height: 290px;
         padding: 28px;
         border-right: 1px solid var(--border);
         border-bottom: 1px solid var(--border);
@@ -1154,6 +1163,25 @@ const projects = [
 
       .footer {
         border-top: 1px solid var(--border);
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .footer-links a {
+        color: inherit;
+        transition: color 160ms ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--text);
+      }
+
+      .footer-separator {
+        opacity: 0.45;
       }
 
       .footer-inner {
