@@ -1,168 +1,151 @@
 ---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
 const updated = "14 September 2026";
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<BaseLayout
+  title="Privacy — Tudor Shandrov"
+  description="Privacy and data use information for shandrov.ru."
+>
+  <main class="privacy-container">
+    <a class="back" href="/">← shandrov.ru</a>
 
-    <meta
-      name="description"
-      content="Privacy and data use information for shandrov.ru."
-    />
+    <span class="index">PRIVACY / DATA USE</span>
 
-    <meta name="theme-color" content="#0b0f14" />
+    <h1>Privacy by minimal collection.</h1>
 
-    <title>Privacy — Tudor Shandrov</title>
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
-  </head>
+    <p class="lead">
+      shandrov.ru is a static professional website designed to minimize
+      collection of visitor data.
+    </p>
 
-  <body>
-    <main class="container">
-      <a class="back" href="/">← shandrov.ru</a>
-
-      <span class="index">PRIVACY / DATA USE</span>
-
-      <h1>Privacy by minimal collection.</h1>
-
-      <p class="lead">
-        shandrov.ru is a static professional website designed to minimize
-        collection of visitor data.
+    <section>
+      <h2>Cookies</h2>
+      <p>
+        The site does not currently use analytics, advertising or other
+        non-essential cookies.
       </p>
+    </section>
 
-      <section>
-        <h2>Cookies</h2>
-        <p>
-          The site does not currently use analytics, advertising or other
-          non-essential cookies.
-        </p>
-      </section>
+    <section>
+      <h2>Analytics and tracking</h2>
+      <p>
+        Google Analytics, Yandex Metrica, advertising pixels and similar
+        browser-side tracking systems are not currently enabled.
+      </p>
+    </section>
 
-      <section>
-        <h2>Analytics and tracking</h2>
-        <p>
-          Google Analytics, Yandex Metrica, advertising pixels and similar
-          browser-side tracking systems are not currently enabled.
-        </p>
-      </section>
+    <section>
+      <h2>Forms and accounts</h2>
+      <p>
+        The site currently provides no user accounts, newsletter
+        subscriptions or contact forms.
+      </p>
+    </section>
 
-      <section>
-        <h2>Forms and accounts</h2>
-        <p>
-          The site currently provides no user accounts, newsletter
-          subscriptions or contact forms.
-        </p>
-      </section>
+    <section>
+      <h2>Technical server data</h2>
+      <p>
+        Web and network infrastructure may process technical connection
+        information required to deliver, troubleshoot and protect the site,
+        including standard server log data. It is not used here for
+        advertising profiles or behavioral personalization.
+      </p>
+    </section>
 
-      <section>
-        <h2>Technical server data</h2>
-        <p>
-          Web and network infrastructure may process technical connection
-          information required to deliver, troubleshoot and protect the site,
-          including standard server log data. It is not used here for
-          advertising profiles or behavioral personalization.
-        </p>
-      </section>
+    <section>
+      <h2>External links</h2>
+      <p>
+        Links to external resources such as GitHub and Runer's Lab lead to
+        independent services with their own data processing practices.
+      </p>
+    </section>
 
-      <section>
-        <h2>External links</h2>
-        <p>
-          Links to external resources such as GitHub and Runer's Lab lead to
-          independent services with their own data processing practices.
-        </p>
-      </section>
+    <p class="updated">Updated: {updated}</p>
+  </main>
 
-      <p class="updated">Updated: {updated}</p>
-    </main>
+  <style>
+    .privacy-container {
+      width: min(calc(100% - 40px), 820px);
+      margin: 0 auto;
+      padding: 80px 0 120px;
+    }
 
-    <style>
-      :global(*) {
-        box-sizing: border-box;
-      }
+    .back {
+      display: inline-block;
+      margin-bottom: 80px;
+      color: #9aa7b4;
+      font-size: 13px;
+    }
 
-      :global(html) {
-        color-scheme: dark;
-        background: #0b0f14;
-      }
+    .index {
+      display: block;
+      margin-bottom: 18px;
+      color: #5b8cff;
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        monospace;
+      font-size: 10px;
+      letter-spacing: 0.13em;
+    }
 
-      :global(body) {
-        margin: 0;
-        color: #f2f5f7;
-        background:
-          linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px),
-          #0b0f14;
-        background-size: 48px 48px;
-        font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system,
-          BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
+    h1 {
+      max-width: 720px;
+      margin: 0 0 30px;
+      font-size: clamp(42px, 7vw, 68px);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
 
-      .container {
-        width: min(calc(100% - 40px), 820px);
-        margin: 0 auto;
-        padding: 80px 0 120px;
+    .lead {
+      max-width: 680px;
+      margin-bottom: 70px;
+      color: #c1cad3;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    section {
+      padding: 28px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 17px;
+    }
+
+    section p {
+      max-width: 680px;
+      margin: 0;
+      color: #9aa7b4;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .updated {
+      margin-top: 60px;
+      color: #65717d;
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        monospace;
+      font-size: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .privacy-container {
+        width: min(calc(100% - 30px), 820px);
+        padding-block: 60px 90px;
       }
 
       .back {
-        display: inline-block;
-        margin-bottom: 80px;
-        color: #9aa7b4;
-        text-decoration: none;
-        font-size: 13px;
+        margin-bottom: 55px;
       }
-
-      .index {
-        display: block;
-        margin-bottom: 18px;
-        color: #5b8cff;
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 10px;
-        letter-spacing: .13em;
-      }
-
-      h1 {
-        max-width: 720px;
-        margin: 0 0 30px;
-        font-size: clamp(42px, 7vw, 68px);
-        line-height: 1;
-        letter-spacing: -.05em;
-      }
-
-      .lead {
-        max-width: 680px;
-        margin-bottom: 70px;
-        color: #c1cad3;
-        font-size: 18px;
-        line-height: 1.7;
-      }
-
-      section {
-        padding: 28px 0;
-        border-top: 1px solid rgba(255,255,255,.09);
-      }
-
-      h2 {
-        margin: 0 0 12px;
-        font-size: 17px;
-      }
-
-      section p {
-        max-width: 680px;
-        margin: 0;
-        color: #9aa7b4;
-        font-size: 14px;
-        line-height: 1.8;
-      }
-
-      .updated {
-        margin-top: 60px;
-        color: #65717d;
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 10px;
-      }
-    </style>
-  </body>
-</html>
+    }
+  </style>
+</BaseLayout>

@@ -1,0 +1,51 @@
+---
+interface Props {
+  homeHref?: string;
+}
+
+const {
+  homeHref = "/",
+} = Astro.props;
+---
+
+<header class="site-header">
+  <div class="site-container site-nav">
+    <a
+      href={homeHref}
+      class="site-brand"
+      aria-label="Tudor Shandrov home"
+    >
+      <span class="site-brand-mark">TS</span>
+      <span class="site-brand-name">
+        Tudor Shandrov
+      </span>
+    </a>
+
+    <nav
+      class="site-nav-links"
+      aria-label="Main navigation"
+    >
+      <a href="/#expertise">Expertise</a>
+      <a href="/#projects">Projects</a>
+      <a href="/#about">About</a>
+
+      <a
+        href="https://runer.su"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Notes
+      </a>
+    </nav>
+
+    <a
+      class="site-github-link"
+      href="https://github.com/greksw"
+      target="_blank"
+      rel="noreferrer"
+    >
+      GitHub
+      <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+</header>
