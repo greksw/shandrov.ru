@@ -1102,7 +1102,9 @@ const projects = [
         }
 
         h1 {
-          font-size: clamp(45px, 14vw, 64px);
+          font-size: clamp(36px, 11.5vw, 52px);
+          line-height: 1.03;
+          overflow-wrap: anywhere;
         }
 
         .hero-lead {
@@ -1167,7 +1169,8 @@ const projects = [
         .section-heading h2,
         .about-copy h2,
         .contact-inner h2 {
-          font-size: 36px;
+          font-size: clamp(30px, 9vw, 36px);
+          line-height: 1.08;
         }
 
         .expertise-grid {
@@ -1179,7 +1182,16 @@ const projects = [
         }
 
         .project {
-          grid-template-columns: 38px 1fr;
+          grid-template-columns: 32px minmax(0, 1fr);
+          gap: 16px;
+        }
+
+        .project-case-link {
+          margin-left: 0;
+        }
+
+        .project-stack {
+          overflow-wrap: anywhere;
         }
 
 .about-card {

@@ -940,7 +940,9 @@ const outcomes = [
 
         h1 {
           font-size:
-            clamp(48px, 14vw, 66px);
+            clamp(34px, 10.8vw, 48px);
+          line-height: 1.02;
+          overflow-wrap: anywhere;
         }
 
         .section {
@@ -948,7 +950,13 @@ const outcomes = [
         }
 
         .architecture {
-          padding: 20px;
+          padding: 16px;
+        }
+
+        .summary strong,
+        .arch-node strong,
+        .arch-node small {
+          overflow-wrap: anywhere;
         }
 
         .delivery {

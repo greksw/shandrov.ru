@@ -273,6 +273,7 @@ a {
 
   font-size: 10px;
   letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
 .site-language a {
