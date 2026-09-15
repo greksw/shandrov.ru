@@ -5,12 +5,14 @@ interface Props {
   title: string;
   description: string;
   lang?: "ru" | "en";
+  image?: string;
 }
 
 const {
   title,
   description,
   lang = "en",
+  image = "/images/social/shandrov-og.png",
 } = Astro.props;
 
 const pathname = Astro.url.pathname;
@@ -32,6 +34,7 @@ const enPath =
 const canonical = new URL(pathname, Astro.site);
 const ruUrl = new URL(ruPath, Astro.site);
 const enUrl = new URL(enPath, Astro.site);
+const socialImage = new URL(image, Astro.site);
 
 /*
  * shandrov.ru uses Russian as the default/root locale.
@@ -58,6 +61,86 @@ const defaultUrl = ruUrl;
     <meta
       name="theme-color"
       content="#0b0f14"
+    />
+
+    <meta
+      property="og:type"
+      content="website"
+    />
+
+    <meta
+      property="og:site_name"
+      content="Tudor Shandrov"
+    />
+
+    <meta
+      property="og:title"
+      content={title}
+    />
+
+    <meta
+      property="og:description"
+      content={description}
+    />
+
+    <meta
+      property="og:url"
+      content={canonical}
+    />
+
+    <meta
+      property="og:image"
+      content={socialImage}
+    />
+
+    <meta
+      property="og:image:type"
+      content="image/png"
+    />
+
+    <meta
+      property="og:image:width"
+      content="1200"
+    />
+
+    <meta
+      property="og:image:height"
+      content="630"
+    />
+
+    <meta
+      property="og:image:alt"
+      content="Tudor Shandrov — Infrastructure Engineer"
+    />
+
+    <meta
+      property="og:locale"
+      content={lang === "ru" ? "ru_RU" : "en_US"}
+    />
+
+    <meta
+      name="twitter:card"
+      content="summary_large_image"
+    />
+
+    <meta
+      name="twitter:title"
+      content={title}
+    />
+
+    <meta
+      name="twitter:description"
+      content={description}
+    />
+
+    <meta
+      name="twitter:image"
+      content={socialImage}
+    />
+
+    <meta
+      name="twitter:image:alt"
+      content="Tudor Shandrov — Infrastructure Engineer"
     />
 
     <link
