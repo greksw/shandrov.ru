@@ -1,0 +1,1182 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import SiteHeader from "../../../../components/SiteHeader.astro";
+import SiteFooter from "../../../../components/SiteFooter.astro";
+
+const responsibilities = [
+  "SNMPv3 access profiles",
+  "Vendor MIBs and IF-MIB",
+  "snmp_exporter modules",
+  "Prometheus recording rules",
+  "ZFS and RAID health",
+  "Capacity, IOPS and throughput",
+  "Temperature and network telemetry",
+  "Alerting and NOC dashboard",
+];
+
+const outcomes = [
+  { value: "2", label: "NAS platforms from different generations" },
+  { value: "SNMPv3", label: "common telemetry transport" },
+  { value: "1 screen", label: "operational storage view" },
+];
+
+const targetExample = [
+  "- targets:",
+  "    - 10.20.10.21",
+  "  labels:",
+  "    device: nas-truenas-01",
+  "    vendor: ixsystems",
+  "    role: storage",
+  "    snmp_auth: truenas_v3",
+  "    snmp_module: system,if_mib,truenas_core",
+].join("\n");
+
+const recordingExample = [
+  "- record: storage:truenas:zpool_used_percent",
+  "  expr: |",
+  "    100 * truenas_zpool_used_units",
+  "    / truenas_zpool_size_units",
+].join("\n");
+
+const healthExample = [
+  "- alert: TrueNASZpoolNotOnline",
+  "  expr: truenas_zpool_health != 0",
+  "  for: 2m",
+  "  labels:",
+  "    severity: critical",
+  "    category: storage",
+].join("\n");
+
+const rateExample = [
+  "rate(truenas_zpool_read_bytes_total[5m])",
+  "rate(truenas_zpool_write_bytes_total[5m])",
+  "",
+  "rate(ifHCInOctets{ifName=\"storage0\"}[5m])",
+  "rate(ifHCOutOctets{ifName=\"storage0\"}[5m])",
+].join("\n");
+---
+
+<BaseLayout
+  title="NAS Monitoring with SNMP Exporter — Tudor Shandrov"
+  description="A practical case study on monitoring a legacy LenovoEMC NAS and TrueNAS CORE with SNMPv3, snmp_exporter, Prometheus, alerting and Grafana."
+  lang="en"
+>
+  <div class="page-glow"></div>
+  <SiteHeader lang="en" />
+
+  <main>
+    <section class="hero container">
+      <a class="back" href="/en/#projects">← Projects</a>
+
+      <div class="hero-grid">
+        <div>
+          <span class="index">CASE / 05</span>
+          <h1>
+            NAS monitoring
+            <span>with SNMP Exporter.</span>
+          </h1>
+          <p class="lead">
+            A legacy LenovoEMC appliance and TrueNAS CORE brought into one
+            operational model using SNMPv3, vendor MIBs, Prometheus recording
+            rules, alerting and a compact Grafana storage dashboard.
+          </p>
+        </div>
+
+        <aside class="summary">
+          <div>
+            <span>Goal</span>
+            <strong>Unified monitoring for heterogeneous NAS platforms</strong>
+          </div>
+          <div>
+            <span>Stack</span>
+            <strong>SNMPv3 · snmp_exporter · Prometheus · Grafana</strong>
+          </div>
+          <div>
+            <span>Focus</span>
+            <strong>Health · capacity · performance · network</strong>
+          </div>
+          <div>
+            <span>Disclosure</span>
+            <strong>Addresses and internal names are anonymized</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="metrics">
+      <div class="container metrics-grid">
+        {outcomes.map((item) => (
+          <div class="metric">
+            <strong>{item.value}</strong>
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-number">01 / CONTEXT</div>
+
+      <div class="two-column">
+        <h2>
+          Different storage generations,
+          one operations problem.
+        </h2>
+
+        <div class="copy">
+          <p>
+            The same environment contains two very different NAS platforms:
+            a closed legacy LenovoEMC appliance and a TrueNAS CORE system
+            built around ZFS. Their OIDs, MIB structure and telemetry
+            capabilities differ substantially.
+          </p>
+
+          <p>
+            The objective was not to collect a handful of SNMP values, but
+            to create one operational view covering availability, capacity,
+            RAID/ZFS state, temperatures, IOPS, throughput, network
+            interfaces and actionable alerts.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark">
+      <div class="container">
+        <div class="section-number">02 / RESPONSIBILITY</div>
+
+        <div class="two-column">
+          <h2>
+            From MIB and OID
+            to a readable NOC screen.
+          </h2>
+
+          <div class="responsibility-grid">
+            {responsibilities.map((item, index) => (
+              <div class="responsibility">
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{item}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-number">03 / ARCHITECTURE</div>
+
+      <div class="two-column architecture-heading">
+        <h2>
+          Vendor-specific collection,
+          one model above it.
+        </h2>
+
+        <p>
+          Each device is scraped with its own SNMP modules. Once metrics
+          pass through snmp_exporter, Prometheus applies the same
+          operational patterns to both platforms.
+        </p>
+      </div>
+
+      <div class="architecture">
+        <div class="architecture-row architecture-three">
+          <div class="arch-node accent">
+            <span>LEGACY NAS</span>
+            <strong>LenovoEMC</strong>
+            <small>HOST-RESOURCES-MIB · vendor MIB</small>
+          </div>
+
+          <div class="arch-node accent">
+            <span>ZFS NAS</span>
+            <strong>TrueNAS CORE</strong>
+            <small>FREENAS-MIB · IF-MIB</small>
+          </div>
+
+          <div class="arch-node">
+            <span>TRANSPORT</span>
+            <strong>SNMPv3</strong>
+            <small>Separate auth profiles</small>
+          </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="architecture-row architecture-three">
+          <div class="arch-node">
+            <span>COLLECT</span>
+            <strong>snmp_exporter</strong>
+            <small>Dedicated modules per platform</small>
+          </div>
+
+          <div class="arch-node">
+            <span>NORMALIZE</span>
+            <strong>Prometheus</strong>
+            <small>Recording rules · alert rules</small>
+          </div>
+
+          <div class="arch-node">
+            <span>OPERATE</span>
+            <strong>Grafana · Alertmanager</strong>
+            <small>NOC overview · actionable alerts</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        TrueNAS uses SNMPv3 authPriv with SHA/AES. The legacy appliance keeps
+        a separate profile matching the capabilities of that device. Secrets
+        are not stored in public examples or repositories.
+      </div>
+    </section>
+
+    <section class="section section-dark">
+      <div class="container">
+        <div class="section-number">04 / METRIC COLLECTION</div>
+
+        <div class="two-column">
+          <h2>
+            Collect what operations
+            actually needs.
+          </h2>
+
+          <div class="copy">
+            <p>
+              A dedicated TrueNAS module based on FREENAS-MIB exposes ZFS pool
+              size and state, read/write counters, ARC data and disk
+              temperatures. IF-MIB was later added for interface state,
+              traffic counters, errors and discards.
+          </p>
+
+          <p>
+            LenovoEMC capacity comes from HOST-RESOURCES-MIB, while RAID,
+            physical disk state, temperatures and fan speeds come from the
+            vendor tree. A full SNMP walk is not exported into Prometheus;
+            the module stays intentionally narrow to reduce noise and
+            cardinality.
+          </p>
+        </div>
+
+        <div class="code-grid">
+          <div class="code-panel">
+            <span>TRUENAS TARGET</span>
+            <pre><code>{targetExample}</code></pre>
+          </div>
+
+          <div class="code-panel">
+            <span>5-MINUTE RATES</span>
+            <pre><code>{rateExample}</code></pre>
+          </div>
+        </div>
+
+        <div class="signal-grid">
+          <div class="signal-card">
+            <strong>ZFS / RAID health</strong>
+            <p>
+              ONLINE/DEGRADED/FAULTED for ZFS plus vendor-specific RAID and
+              physical disk state for the legacy appliance.
+            </p>
+          </div>
+
+          <div class="signal-card">
+            <strong>Capacity</strong>
+            <p>
+              Used, available, total and percentage values with allocation
+              units normalized to bytes.
+            </p>
+          </div>
+
+          <div class="signal-card">
+            <strong>Performance</strong>
+            <p>
+              Read/write throughput, IOPS, ARC, temperatures and network
+              RX/TX for active interfaces.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-number">05 / NORMALIZATION</div>
+
+      <div class="two-column">
+        <h2>
+          Raw OIDs should not
+          define Grafana.
+        </h2>
+
+        <div class="copy">
+          <p>
+            FREENAS-MIB represents pool capacity through allocation units.
+            Conversion to bytes and percentages is handled by Prometheus
+            recording rules. Grafana and alerts therefore consume normalized
+            metrics instead of repeating vendor-specific expressions.
+          </p>
+
+          <p>
+            This layer makes future changes easier: the collection or
+            recording rule can change while dashboards and operational
+            alerting remain comparatively stable.
+          </p>
+        </div>
+      </div>
+
+      <div class="code-grid">
+        <div class="code-panel">
+          <span>RECORDING RULE</span>
+          <pre><code>{recordingExample}</code></pre>
+        </div>
+
+        <div class="code-panel">
+          <span>HEALTH ALERT</span>
+          <pre><code>{healthExample}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark">
+      <div class="container">
+        <div class="section-number">06 / ALERTING</div>
+
+        <div class="delivery">
+          <article>
+            <span>01</span>
+            <h3>Availability</h3>
+            <p>
+              Loss of an SNMP scrape is detected independently of the
+              visualization layer.
+            </p>
+          </article>
+
+          <article>
+            <span>02</span>
+            <h3>Storage health</h3>
+            <p>
+              Any ZFS pool state other than ONLINE and abnormal RAID or disk
+              state require attention.
+            </p>
+          </article>
+
+          <article>
+            <span>03</span>
+            <h3>Capacity</h3>
+            <p>
+              80%, 90% and 95% thresholds separate warning, critical and
+              almost-full conditions.
+            </p>
+          </article>
+
+          <article>
+            <span>04</span>
+            <h3>Temperature</h3>
+            <p>
+              HDD and NVMe use different operational thresholds to avoid
+              noisy alerts.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-number">07 / DASHBOARD</div>
+
+      <div class="two-column">
+        <h2>
+          An overview should answer:
+          “do I need to act?”
+        </h2>
+
+        <div class="copy">
+          <p>
+            The first dashboard revision contained many historical graphs.
+            It was technically detailed but difficult to scan as a NOC view.
+            The final design was rebuilt around current operational state.
+          </p>
+
+          <p>
+            One screen now covers availability, alerts, temperatures, ARC
+            hit ratio, ZFS/RAID health, capacity, read/write throughput,
+            IOPS, interface state, network RX/TX and errors/discards.
+            Detailed history can remain in a separate drill-down dashboard.
+          </p>
+        </div>
+      </div>
+
+      <div class="signal-grid">
+        <div class="signal-card">
+          <strong>Top</strong>
+          <p>Availability · alerts · temperatures · ARC · interfaces.</p>
+        </div>
+
+        <div class="signal-card">
+          <strong>Middle</strong>
+          <p>Pool capacity · ZFS health · RAID · physical disks.</p>
+        </div>
+
+        <div class="signal-card">
+          <strong>Bottom</strong>
+          <p>Read/write · IOPS · network RX/TX · errors/discards.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="result">
+      <div class="container result-grid">
+        <span class="section-number">08 / RESULT</span>
+
+        <h2>
+          Two different NAS platforms,
+          one operational picture.
+        </h2>
+
+        <p>
+          A legacy appliance and TrueNAS now share one monitoring pipeline
+          without agents on the storage systems. Vendor-specific SNMP stays
+          at collection time; normalized metrics, common alerting patterns
+          and a compact Grafana overview sit above it.
+        </p>
+
+        <a href="/en/#projects">← Back to projects</a>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter lang="en" />
+
+<style is:global>
+      :root {
+        color-scheme: dark;
+
+        --bg: #0b0f14;
+        --surface: #121920;
+        --surface-2: #151e27;
+        --border: rgba(255, 255, 255, 0.09);
+        --border-strong: rgba(255, 255, 255, 0.15);
+
+        --text: #f2f5f7;
+        --muted: #9aa7b4;
+        --muted-strong: #c1cad3;
+
+        --blue: #5b8cff;
+        --cyan: #52d3c5;
+
+        --container: 1180px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--bg);
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+
+        color: var(--text);
+
+        background:
+          linear-gradient(
+            rgba(255, 255, 255, 0.018) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.018) 1px,
+            transparent 1px
+          ),
+          var(--bg);
+
+        background-size: 48px 48px;
+
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(
+          calc(100% - 48px),
+          var(--container)
+        );
+
+        margin-inline: auto;
+      }
+
+      .page-glow {
+        position: fixed;
+        z-index: -1;
+        top: -250px;
+        right: -200px;
+
+        width: 600px;
+        height: 600px;
+
+        border-radius: 50%;
+
+        background: var(--blue);
+
+        opacity: 0.08;
+        filter: blur(150px);
+      }
+
+      .hero {
+        padding-block: 92px 110px;
+      }
+
+      .back {
+        display: inline-block;
+
+        margin-bottom: 72px;
+
+        color: var(--muted);
+
+        font-size: 12px;
+      }
+
+      .hero-grid,
+      .two-column {
+        display: grid;
+        grid-template-columns:
+          minmax(0, 1.2fr)
+          minmax(320px, 0.8fr);
+
+        gap: 90px;
+      }
+
+      .index,
+      .section-number {
+        display: block;
+
+        margin-bottom: 22px;
+
+        color: var(--blue);
+
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+
+        font-size: 10px;
+        letter-spacing: 0.13em;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 690px;
+
+        margin-bottom: 30px;
+
+        font-size:
+          clamp(52px, 7vw, 82px);
+
+        line-height: 0.96;
+        letter-spacing: -0.055em;
+      }
+
+      h1 span {
+        display: block;
+
+        color: var(--muted);
+
+        font-weight: 500;
+      }
+
+      .lead {
+        max-width: 720px;
+
+        margin-bottom: 0;
+
+        color: var(--muted-strong);
+
+        font-size: 18px;
+        line-height: 1.7;
+      }
+
+      .summary {
+        align-self: end;
+
+        border-top:
+          1px solid var(--border-strong);
+      }
+
+      .summary > div {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        padding: 17px 0;
+
+        border-bottom:
+          1px solid var(--border);
+      }
+
+      .summary span {
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .summary strong {
+        font-size: 12px;
+      }
+
+      .metrics {
+        border-block:
+          1px solid var(--border);
+
+        background:
+          rgba(255, 255, 255, 0.012);
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns:
+          repeat(3, 1fr);
+      }
+
+      .metric {
+        display: flex;
+        min-height: 140px;
+
+        flex-direction: column;
+        justify-content: center;
+
+        padding: 30px;
+
+        border-right:
+          1px solid var(--border);
+      }
+
+      .metric:first-child {
+        border-left:
+          1px solid var(--border);
+      }
+
+      .metric strong {
+        margin-bottom: 5px;
+
+        font-size: 25px;
+        letter-spacing: -0.035em;
+      }
+
+      .metric span {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .section {
+        padding-block: 110px;
+      }
+
+      .section-dark {
+        border-block:
+          1px solid var(--border);
+
+        background:
+          rgba(255, 255, 255, 0.012);
+      }
+
+      .two-column h2,
+      .result h2 {
+        max-width: 650px;
+
+        margin-bottom: 0;
+
+        font-size:
+          clamp(36px, 4.5vw, 54px);
+
+        line-height: 1.08;
+        letter-spacing: -0.045em;
+      }
+
+      .copy p,
+      .architecture-heading p,
+      .result p {
+        color: var(--muted);
+
+        font-size: 14px;
+        line-height: 1.8;
+      }
+
+      .copy p:last-child {
+        margin-bottom: 0;
+      }
+
+      .responsibility-grid {
+        display: grid;
+        grid-template-columns:
+          1fr 1fr;
+
+        border-top:
+          1px solid var(--border);
+      }
+
+      .responsibility {
+        display: flex;
+        min-height: 92px;
+
+        gap: 15px;
+        align-items: center;
+
+        padding: 18px;
+
+        border-right:
+          1px solid var(--border);
+        border-bottom:
+          1px solid var(--border);
+      }
+
+      .responsibility span {
+        color: var(--blue);
+
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+
+        font-size: 9px;
+      }
+
+      .responsibility strong {
+        font-size: 12px;
+      }
+
+      .architecture-heading {
+        align-items: end;
+
+        margin-bottom: 52px;
+      }
+
+      .architecture-heading p {
+        max-width: 420px;
+        margin-bottom: 0;
+      }
+
+      .architecture {
+        padding: 42px;
+
+        border: 1px solid var(--border-strong);
+        border-radius: 20px;
+
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255,255,255,.03),
+            transparent
+          ),
+          var(--surface);
+      }
+
+      .architecture-row {
+        display: flex;
+        justify-content: center;
+      }
+
+      .architecture-three {
+        display: grid;
+        grid-template-columns:
+          repeat(3, 1fr);
+
+        gap: 16px;
+      }
+
+      .arch-node {
+        display: flex;
+
+        min-height: 135px;
+
+        flex-direction: column;
+        justify-content: center;
+
+        padding: 22px;
+
+        border:
+          1px solid var(--border);
+
+        border-radius: 12px;
+
+        background:
+          rgba(11,15,20,.65);
+      }
+
+      .arch-node.accent {
+        width: min(100%, 500px);
+
+        border-color:
+          rgba(91,140,255,.35);
+
+        background:
+          rgba(91,140,255,.07);
+      }
+
+      .arch-node span {
+        margin-bottom: 11px;
+
+        color: var(--blue);
+
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+
+        font-size: 9px;
+        letter-spacing: .11em;
+      }
+
+      .arch-node strong {
+        margin-bottom: 7px;
+
+        font-size: 15px;
+      }
+
+      .arch-node small {
+        color: var(--muted);
+
+        font-size: 11px;
+      }
+
+      .connector {
+        width: 1px;
+        height: 34px;
+
+        margin-inline: auto;
+
+        background:
+          linear-gradient(
+            var(--blue),
+            rgba(91,140,255,.15)
+          );
+      }
+
+
+
+      .delivery {
+        display: grid;
+        grid-template-columns:
+          repeat(4, 1fr);
+
+        border-top:
+          1px solid var(--border);
+        border-left:
+          1px solid var(--border);
+      }
+
+      .delivery article {
+        min-height: 270px;
+
+        padding: 28px;
+
+        border-right:
+          1px solid var(--border);
+        border-bottom:
+          1px solid var(--border);
+      }
+
+      .delivery article > span {
+        display: block;
+
+        margin-bottom: 65px;
+
+        color: var(--blue);
+
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+
+        font-size: 9px;
+      }
+
+      .delivery h3 {
+        margin-bottom: 14px;
+
+        font-size: 17px;
+      }
+
+      .delivery p {
+        margin-bottom: 0;
+
+        color: var(--muted);
+
+        font-size: 12px;
+        line-height: 1.7;
+      }
+
+      .result {
+        padding-block: 110px;
+
+        border-top:
+          1px solid var(--border);
+
+        background:
+          linear-gradient(
+            135deg,
+            rgba(91,140,255,.08),
+            transparent 45%
+          );
+      }
+
+      .result-grid {
+        display: grid;
+        grid-template-columns:
+          0.35fr 1.4fr 0.75fr;
+
+        gap: 55px;
+        align-items: start;
+      }
+
+      .result p {
+        margin-bottom: 0;
+      }
+
+      .result a {
+        grid-column: 2;
+
+        width: max-content;
+
+        margin-top: 12px;
+
+        color: var(--blue);
+
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+
+
+        .hero-grid,
+        .two-column,
+        .result-grid {
+          grid-template-columns: 1fr;
+          gap: 45px;
+        }
+
+        .metrics-grid,
+        .architecture-three {
+          grid-template-columns: 1fr;
+        }
+
+        .metric {
+          border-bottom:
+            1px solid var(--border);
+          border-left:
+            1px solid var(--border);
+        }
+
+        .responsibility-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .delivery {
+          grid-template-columns:
+            repeat(2, 1fr);
+        }
+
+        .result a {
+          grid-column: 1;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          width:
+            min(calc(100% - 30px), var(--container));
+        }
+
+        .hero {
+          padding-block: 65px 80px;
+        }
+
+        .back {
+          margin-bottom: 50px;
+        }
+
+        h1 {
+          font-size:
+            clamp(34px, 10.8vw, 48px);
+          line-height: 1.02;
+          overflow-wrap: anywhere;
+        }
+
+        .section {
+          padding-block: 80px;
+        }
+
+        .architecture {
+          padding: 16px;
+        }
+
+        .summary strong,
+        .arch-node strong,
+        .arch-node small {
+          overflow-wrap: anywhere;
+        }
+
+        .delivery {
+          grid-template-columns: 1fr;
+        }
+
+
+      }
+
+
+      .branch-connector {
+          position: relative;
+          z-index: 3;
+          width: 66.666%;
+          height: 54px;
+          margin-inline: auto;
+        }
+
+        .branch-stem {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 1px;
+          height: 27px;
+          background: rgba(91, 140, 255, 0.7);
+        }
+
+        .branch-bus {
+          position: absolute;
+          top: 26px;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: rgba(91, 140, 255, 0.55);
+        }
+
+        .branch-drop {
+          position: absolute;
+          top: 26px;
+          width: 1px;
+          height: 28px;
+          background: rgba(91, 140, 255, 0.55);
+        }
+
+        .branch-drop-left {
+          left: 0;
+        }
+
+        .branch-drop-center {
+          left: 50%;
+        }
+
+        .branch-drop-right {
+          right: 0;
+        }
+
+        @media (max-width: 900px) {
+          .branch-connector {
+            display: none;
+          }
+        }
+    
+      .code-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 42px;
+      }
+
+      .code-panel {
+        min-width: 0;
+        padding: 22px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(11, 15, 20, 0.72);
+      }
+
+      .code-panel > span {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--blue);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 9px;
+        letter-spacing: .11em;
+      }
+
+      .code-panel pre {
+        overflow-x: auto;
+        margin: 0;
+        color: var(--muted-strong);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 11px;
+        line-height: 1.65;
+        white-space: pre;
+      }
+
+      .signal-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 42px;
+      }
+
+      .signal-card {
+        padding: 22px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(11, 15, 20, .58);
+      }
+
+      .signal-card strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      .signal-card p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.7;
+      }
+
+      .note {
+        margin-top: 34px;
+        padding: 18px 20px;
+        border-left: 2px solid var(--blue);
+        background: rgba(91, 140, 255, .06);
+        color: var(--muted-strong);
+        font-size: 12px;
+        line-height: 1.75;
+      }
+
+      @media (max-width: 900px) {
+        .code-grid,
+        .signal-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+</style>
+</BaseLayout>
