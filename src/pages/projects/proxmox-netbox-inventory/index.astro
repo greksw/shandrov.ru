@@ -1,0 +1,141 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
+import SiteFooter from "../../../components/SiteFooter.astro";
+---
+<BaseLayout title="Proxmox VE + NetBox + Zabbix — автоматизация инфраструктуры | Tudor Shandrov" description="Production-кейс: Python-инвентаризация Proxmox VE, NetBox DCIM/IPAM, проверяемый импорт и ежедневный контроль изменений через systemd и Zabbix." lang="ru">
+  <div class="glow"></div>
+  <SiteHeader lang="ru" />
+  <main>
+    <section class="hero container">
+      <a class="back" href="/#projects">← Все проекты</a>
+      <span class="eyebrow">КЕЙС / 07 · LINUX / INFRASTRUCTURE AUTOMATION</span>
+      <h1>Инвентаризация Proxmox.<span>Контроль через NetBox и Zabbix.</span></h1>
+      <p class="lead">Разработал и внедрил управляемый контур учёта инфраструктуры: от сбора конфигурации гипервизоров и виртуальных машин до сверки с NetBox и ежедневного мониторинга расхождений.</p>
+      <div class="tags"><span>Proxmox VE</span>
+<span>Linux</span>
+<span>Python</span>
+<span>NetBox</span>
+<span>systemd</span>
+<span>Zabbix</span>
+<span>GitHub Actions</span></div>
+      <div class="metrics"><div class="metric"><strong>READ-ONLY</strong><span>Ежедневный сбор и аудит без автоматического изменения инфраструктуры</span></div>
+<div class="metric"><strong>0 DRIFT</strong><span>Расхождений при приёмочной проверке</span></div>
+<div class="metric"><strong>RU / EN</strong><span>Публичный обезличенный исходный код и документация</span></div></div>
+    </section>
+    <section class="section tinted">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">01 / ЗАДАЧА</span>
+          <h2>Нужен источник достоверных данных, а не очередная таблица.</h2>
+          <p>Виртуальные машины, сетевые адаптеры и настройки кластерных узлов постоянно меняются. Ручная инвентаризация быстро устаревает, а ошибка при массовой синхронизации может затронуть production. Требовалось не только собрать объекты в NetBox, но и проверять их актуальность без автоматического внесения изменений.</p>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">02 / АРХИТЕКТУРА</span>
+          <h2>Разделение сбора, учёта и контроля.</h2>
+          <p>Каждый компонент отвечает за конкретный участок, а доступ к API и записи в базу разделены по полномочиям.</p>
+        </div>
+        <div class="architecture" aria-label="Архитектура решения">
+          <article><small>01 / SOURCE</small><h3>Proxmox VE</h3><p>pvesh GET: узлы, QEMU/LXC, интерфейсы и ресурсы</p></article>
+<article><small>02 / COLLECT</small><h3>Python</h3><p>Нормализация данных, проверка полноты, приватные JSON-снимки</p></article>
+<article><small>03 / INVENTORY</small><h3>NetBox</h3><p>DCIM и Virtualization: физические устройства, VM и vNIC</p></article>
+<article><small>04 / AUDIT</small><h3>systemd</h3><p>Ежедневная независимая сверка hardware и guest inventory</p></article>
+<article><small>05 / OBSERVE</small><h3>Zabbix</h3><p>Статус CLEAN / DRIFT / ERROR, число расхождений и время проверки</p></article>
+        </div>
+      </div>
+    </section>
+    <section class="section tinted">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">03 / РЕАЛИЗАЦИЯ</span>
+          <h2>Из скриптов — в управляемый процесс.</h2>
+        </div>
+        <div class="features"><article class="feature"><h3>Инвентаризация узлов и VM</h3><p>Сбор характеристик гипервизоров, виртуальных машин QEMU/LXC, CPU, RAM и сетевых интерфейсов. Сопоставление с существующими объектами NetBox по устойчивым идентификаторам.</p></article>
+<article class="feature"><h3>Безопасный импорт</h3><p>Предварительный preview и dry-run, проверка контрольного количества, резервная копия PostgreSQL, подтверждение изменений и транзакционное создание интерфейсов. Автоматическая коррекция отключена.</p></article>
+<article class="feature"><h3>Работа с исключениями</h3><p>Эталонные выключенные VM могут содержать дублирующийся MAC. В этом случае интерфейс учитывается, но конфликтующий адрес не назначается; исключение явно проверяется аудитором.</p></article>
+<article class="feature"><h3>Мониторинг и контроль изменений</h3><p>Раздельные systemd timers для оборудования и VM, изолированные отчёты, санитаризованный экспорт трёх числовых метрик через Zabbix Agent и триггеры на расхождения, ошибки и устаревание данных.</p></article></div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container results">
+        <div>
+          <span class="eyebrow">04 / РЕЗУЛЬТАТ</span>
+          <h2>Проверяемая инвентаризация вместо ручного учёта.</h2>
+          <p class="copy">На действующей корпоративной площадке NetBox сопоставлен с Proxmox по узлам, гостевым системам и сетевым интерфейсам. Интеграция проверена не только локальным запуском: Zabbix Server действительно опрашивает новые показатели. Это контроль соответствия, а не двусторонний оркестратор изменений.</p>
+        </div>
+        <ul class="checklist"><li>Независимые ежедневные проверки hardware и VM/LXC</li>
+<li>Отдельные статусы CLEAN, DRIFT и ERROR</li>
+<li>Проверка актуальности снимков и контроль исключений</li>
+<li>Защищённые права на файлы, TLS и read-only API-доступ</li>
+<li>Тесты Python и проверка изменений через GitHub Actions</li></ul>
+      </div>
+    </section>
+    <section class="section tinted">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">05 / ИСХОДНИКИ</span>
+          <h2>Практика, которую можно изучить в коде.</h2>
+          <p>В открытом репозитории — сборщики, аудиторы, примеры systemd, интеграция с Zabbix, тесты и документация. Реальные параметры корпоративной площадки, внутренние IP, имена узлов, VMID и MAC-адреса не публикуются.</p>
+          <div class="actions">
+            <a class="outbound primary" href="https://github.com/greksw/netbox-inventory-toolkit" target="_blank" rel="noopener noreferrer">Исходники на GitHub ↗</a>
+            <a class="outbound" href="/#projects">Другие проекты ↗</a>
+          </div>
+        </div>
+        <div class="disclosure">Область применения: инвентаризация и обнаружение расхождений. NetBox не выполняет произвольное управление Proxmox, а изменения не применяются автоматически при обнаружении drift. Код требует настройки под конкретную инфраструктуру и независимой проверки перед производственным использованием.</div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter lang="ru" />
+  
+<style>
+  .glow { position:absolute; inset:90px 0 auto; height:420px; pointer-events:none; background:radial-gradient(ellipse at 55% 0%,rgba(91,140,255,.13),transparent 67%); }
+  .container { width:min(calc(100% - 48px),var(--container)); margin-inline:auto; }
+  .hero { position:relative; padding-block:84px 78px; }
+  .back { display:inline-block; margin-bottom:56px; color:var(--muted-strong); font-size:12px; }
+  .back:hover,.outbound:hover { color:#a8beff; }
+  .eyebrow { display:block; color:var(--blue); font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.13em; text-transform:uppercase; }
+  h1,h2,h3,p { margin-top:0; }
+  h1 { max-width:930px; margin:24px 0 28px; font-size:clamp(42px,6.2vw,80px); line-height:1.03; letter-spacing:-.055em; }
+  h1 span { color:var(--blue); }
+  .lead { max-width:840px; color:var(--muted-strong); font-size:clamp(16px,2vw,19px); line-height:1.8; }
+  .tags { display:flex; gap:9px; flex-wrap:wrap; margin-top:32px; }
+  .tags span { border:1px solid var(--border-strong); border-radius:100px; padding:7px 12px; color:var(--muted-strong); font-size:11px; }
+  .metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:58px; border-block:1px solid var(--border); }
+  .metric { display:flex; flex-direction:column; gap:7px; padding:24px; border-right:1px solid var(--border); }
+  .metric:first-child { padding-left:0; }
+  .metric:last-child { border:0; }
+  .metric strong { font-size:24px; letter-spacing:-.04em; }
+  .metric span { color:var(--muted); font-size:12px; }
+  .section { padding-block:84px; border-top:1px solid var(--border); }
+  .section.tinted { background:rgba(255,255,255,.014); }
+  .section-head { max-width:850px; margin-bottom:34px; }
+  h2 { margin:15px 0 14px; font-size:clamp(30px,4vw,44px); line-height:1.12; letter-spacing:-.04em; }
+  .section-head p,.copy { color:var(--muted-strong); font-size:14px; line-height:1.85; }
+  .architecture { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+  .architecture article { min-width:0; min-height:157px; padding:21px 18px; border:1px solid var(--border-strong); border-radius:12px; background:var(--surface); }
+  .architecture small { display:block; margin-bottom:18px; color:var(--cyan); font:600 10px ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .architecture h3 { margin-bottom:9px; font-size:16px; }
+  .architecture p { margin:0; color:var(--muted); font-size:11px; line-height:1.65; }
+  .features { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+  .feature { min-width:0; padding:27px; border:1px solid var(--border); border-radius:14px; background:var(--surface); }
+  .feature h3 { margin:0 0 13px; font-size:18px; }
+  .feature p { margin:0; color:var(--muted-strong); font-size:13px; line-height:1.8; }
+  .results { display:grid; grid-template-columns:1fr 1fr; gap:64px; }
+  .results .copy { max-width:720px; }
+  .checklist { padding:0; margin:0; list-style:none; border-top:1px solid var(--border); }
+  .checklist li { display:flex; gap:13px; padding:14px 0; border-bottom:1px solid var(--border); color:var(--muted-strong); font-size:13px; line-height:1.65; }
+  .checklist li::before { content:"✓"; flex:none; color:var(--cyan); font-weight:800; }
+  .disclosure { margin-top:32px; padding:20px 24px; border-left:2px solid var(--blue); background:rgba(91,140,255,.045); color:var(--muted-strong); font-size:12px; line-height:1.8; }
+  .actions { display:flex; gap:14px; flex-wrap:wrap; margin-top:28px; }
+  .outbound { display:inline-block; padding:13px 19px; border:1px solid var(--border-strong); border-radius:10px; font-size:13px; font-weight:600; }
+  .outbound.primary { background:var(--blue); border-color:var(--blue); color:#08111d; }
+  .outbound.primary:hover { background:#83a8ff; color:#08111d; }
+  @media(max-width:1050px) { .architecture {grid-template-columns:repeat(3,minmax(0,1fr));} }
+  @media(max-width:780px) { .features,.results {grid-template-columns:1fr;gap:22px;} .architecture {grid-template-columns:repeat(2,minmax(0,1fr));} .metrics {grid-template-columns:1fr;} .metric,.metric:first-child {padding:16px 0;border-right:0;border-bottom:1px solid var(--border);} .metric:last-child {border:0;} }
+  @media(max-width:530px) { .container {width:min(calc(100% - 32px),var(--container));} .hero {padding-block:48px 58px;} .back {margin-bottom:40px;} .section {padding-block:60px;} .architecture {grid-template-columns:1fr;} .architecture article {min-height:0;} .feature {padding:22px;} h1 {overflow-wrap:anywhere;} }
+</style>
+</BaseLayout>
