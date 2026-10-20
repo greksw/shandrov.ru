@@ -1,0 +1,141 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import SiteHeader from "../../../../components/SiteHeader.astro";
+import SiteFooter from "../../../../components/SiteFooter.astro";
+---
+<BaseLayout title="Proxmox VE, NetBox &amp; Zabbix — infrastructure automation | Tudor Shandrov" description="Production infrastructure case: Python-based Proxmox inventory, NetBox DCIM/IPAM, reviewed imports and daily drift detection using systemd and Zabbix." lang="en">
+  <div class="glow"></div>
+  <SiteHeader lang="en" />
+  <main>
+    <section class="hero container">
+      <a class="back" href="/en/#projects">← All projects</a>
+      <span class="eyebrow">CASE STUDY / 07 · LINUX / INFRASTRUCTURE AUTOMATION</span>
+      <h1>Proxmox inventory.<span>Drift control with NetBox and Zabbix.</span></h1>
+      <p class="lead">Designed and deployed an operational inventory workflow, from collecting hypervisor and VM configurations to reconciling them against NetBox and monitoring daily drift.</p>
+      <div class="tags"><span>Proxmox VE</span>
+<span>Linux</span>
+<span>Python</span>
+<span>NetBox</span>
+<span>systemd</span>
+<span>Zabbix</span>
+<span>GitHub Actions</span></div>
+      <div class="metrics"><div class="metric"><strong>READ-ONLY</strong><span>Scheduled discovery and audits without automatic infrastructure changes</span></div>
+<div class="metric"><strong>0 DRIFT</strong><span>Differences found during acceptance testing</span></div>
+<div class="metric"><strong>RU / EN</strong><span>Public, sanitized code and documentation</span></div></div>
+    </section>
+    <section class="section tinted">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">01 / CHALLENGE</span>
+          <h2>A reliable inventory, not another spreadsheet.</h2>
+          <p>Virtual machines, network adapters and cluster settings change continuously. Manual records become stale, while bulk synchronization mistakes can affect production. The goal was to maintain a usable NetBox inventory and detect changes without automatically pushing configuration updates.</p>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">02 / ARCHITECTURE</span>
+          <h2>Separate discovery, inventory and verification.</h2>
+          <p>Each component has a defined role, with read-only API access separate from privileged write operations.</p>
+        </div>
+        <div class="architecture" aria-label="Solution architecture">
+          <article><small>01 / SOURCE</small><h3>Proxmox VE</h3><p>pvesh GET: nodes, QEMU/LXC guests, NICs and resources</p></article>
+<article><small>02 / COLLECT</small><h3>Python</h3><p>Normalized inventory, completeness checks and private JSON snapshots</p></article>
+<article><small>03 / INVENTORY</small><h3>NetBox</h3><p>DCIM and Virtualization: hosts, VMs and virtual NICs</p></article>
+<article><small>04 / AUDIT</small><h3>systemd</h3><p>Separate daily physical-host and guest drift checks</p></article>
+<article><small>05 / OBSERVE</small><h3>Zabbix</h3><p>CLEAN / DRIFT / ERROR, difference count and audit timestamp</p></article>
+        </div>
+      </div>
+    </section>
+    <section class="section tinted">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">03 / IMPLEMENTATION</span>
+          <h2>From scripts to an operational workflow.</h2>
+        </div>
+        <div class="features"><article class="feature"><h3>Host and VM discovery</h3><p>Collect hypervisor hardware, QEMU/LXC guests, assigned CPU/RAM and virtual networking. Reconcile records against existing NetBox objects using stable identifiers.</p></article>
+<article class="feature"><h3>Guarded import</h3><p>Reviewable preview and dry-run, expected-count checks, a PostgreSQL backup, explicit confirmation and transactional interface creation. No automatic remediation.</p></article>
+<article class="feature"><h3>Intentional exceptions</h3><p>A stopped VM template may share a MAC with a live guest. The NIC is inventoried without assigning the conflicting address, and the exception is verified by the audit.</p></article>
+<article class="feature"><h3>Drift monitoring</h3><p>Separate systemd timers and report paths for hosts and guests, sanitized numeric export via Zabbix Agent, and triggers for drift, execution errors and stale data.</p></article></div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container results">
+        <div>
+          <span class="eyebrow">04 / OUTCOME</span>
+          <h2>Auditable inventory rather than manual tracking.</h2>
+          <p class="copy">The production NetBox inventory was verified against Proxmox for hosts, guests and network interfaces. End-to-end validation included Zabbix Server polling the exported values. The system detects drift; it is not a bidirectional infrastructure orchestrator.</p>
+        </div>
+        <ul class="checklist"><li>Independent daily hardware and QEMU/LXC drift checks</li>
+<li>Distinct CLEAN, DRIFT and ERROR states</li>
+<li>Snapshot freshness and exception validation</li>
+<li>Restricted file permissions, TLS and scoped read-only API credentials</li>
+<li>Python tests and GitHub Actions CI checks</li></ul>
+      </div>
+    </section>
+    <section class="section tinted">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">05 / SOURCE CODE</span>
+          <h2>Engineering decisions backed by code.</h2>
+          <p>The public repository includes collectors, auditors, systemd definitions, Zabbix integration, tests and operational documentation. Production addresses, internal hostnames, VMIDs and MACs are excluded.</p>
+          <div class="actions">
+            <a class="outbound primary" href="https://github.com/greksw/netbox-inventory-toolkit" target="_blank" rel="noopener noreferrer">Explore GitHub repository ↗</a>
+            <a class="outbound" href="/en/#projects">Back to projects ↗</a>
+          </div>
+        </div>
+        <div class="disclosure">Scope: inventory and drift detection. NetBox does not directly manage Proxmox configuration, and drift never triggers automatic changes. The code requires environment-specific configuration and validation before use in production.</div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter lang="en" />
+  
+<style>
+  .glow { position:absolute; inset:90px 0 auto; height:420px; pointer-events:none; background:radial-gradient(ellipse at 55% 0%,rgba(91,140,255,.13),transparent 67%); }
+  .container { width:min(calc(100% - 48px),var(--container)); margin-inline:auto; }
+  .hero { position:relative; padding-block:84px 78px; }
+  .back { display:inline-block; margin-bottom:56px; color:var(--muted-strong); font-size:12px; }
+  .back:hover,.outbound:hover { color:#a8beff; }
+  .eyebrow { display:block; color:var(--blue); font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.13em; text-transform:uppercase; }
+  h1,h2,h3,p { margin-top:0; }
+  h1 { max-width:930px; margin:24px 0 28px; font-size:clamp(42px,6.2vw,80px); line-height:1.03; letter-spacing:-.055em; }
+  h1 span { color:var(--blue); }
+  .lead { max-width:840px; color:var(--muted-strong); font-size:clamp(16px,2vw,19px); line-height:1.8; }
+  .tags { display:flex; gap:9px; flex-wrap:wrap; margin-top:32px; }
+  .tags span { border:1px solid var(--border-strong); border-radius:100px; padding:7px 12px; color:var(--muted-strong); font-size:11px; }
+  .metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:58px; border-block:1px solid var(--border); }
+  .metric { display:flex; flex-direction:column; gap:7px; padding:24px; border-right:1px solid var(--border); }
+  .metric:first-child { padding-left:0; }
+  .metric:last-child { border:0; }
+  .metric strong { font-size:24px; letter-spacing:-.04em; }
+  .metric span { color:var(--muted); font-size:12px; }
+  .section { padding-block:84px; border-top:1px solid var(--border); }
+  .section.tinted { background:rgba(255,255,255,.014); }
+  .section-head { max-width:850px; margin-bottom:34px; }
+  h2 { margin:15px 0 14px; font-size:clamp(30px,4vw,44px); line-height:1.12; letter-spacing:-.04em; }
+  .section-head p,.copy { color:var(--muted-strong); font-size:14px; line-height:1.85; }
+  .architecture { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+  .architecture article { min-width:0; min-height:157px; padding:21px 18px; border:1px solid var(--border-strong); border-radius:12px; background:var(--surface); }
+  .architecture small { display:block; margin-bottom:18px; color:var(--cyan); font:600 10px ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .architecture h3 { margin-bottom:9px; font-size:16px; }
+  .architecture p { margin:0; color:var(--muted); font-size:11px; line-height:1.65; }
+  .features { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+  .feature { min-width:0; padding:27px; border:1px solid var(--border); border-radius:14px; background:var(--surface); }
+  .feature h3 { margin:0 0 13px; font-size:18px; }
+  .feature p { margin:0; color:var(--muted-strong); font-size:13px; line-height:1.8; }
+  .results { display:grid; grid-template-columns:1fr 1fr; gap:64px; }
+  .results .copy { max-width:720px; }
+  .checklist { padding:0; margin:0; list-style:none; border-top:1px solid var(--border); }
+  .checklist li { display:flex; gap:13px; padding:14px 0; border-bottom:1px solid var(--border); color:var(--muted-strong); font-size:13px; line-height:1.65; }
+  .checklist li::before { content:"✓"; flex:none; color:var(--cyan); font-weight:800; }
+  .disclosure { margin-top:32px; padding:20px 24px; border-left:2px solid var(--blue); background:rgba(91,140,255,.045); color:var(--muted-strong); font-size:12px; line-height:1.8; }
+  .actions { display:flex; gap:14px; flex-wrap:wrap; margin-top:28px; }
+  .outbound { display:inline-block; padding:13px 19px; border:1px solid var(--border-strong); border-radius:10px; font-size:13px; font-weight:600; }
+  .outbound.primary { background:var(--blue); border-color:var(--blue); color:#08111d; }
+  .outbound.primary:hover { background:#83a8ff; color:#08111d; }
+  @media(max-width:1050px) { .architecture {grid-template-columns:repeat(3,minmax(0,1fr));} }
+  @media(max-width:780px) { .features,.results {grid-template-columns:1fr;gap:22px;} .architecture {grid-template-columns:repeat(2,minmax(0,1fr));} .metrics {grid-template-columns:1fr;} .metric,.metric:first-child {padding:16px 0;border-right:0;border-bottom:1px solid var(--border);} .metric:last-child {border:0;} }
+  @media(max-width:530px) { .container {width:min(calc(100% - 32px),var(--container));} .hero {padding-block:48px 58px;} .back {margin-bottom:40px;} .section {padding-block:60px;} .architecture {grid-template-columns:1fr;} .architecture article {min-height:0;} .feature {padding:22px;} h1 {overflow-wrap:anywhere;} }
+</style>
+</BaseLayout>
