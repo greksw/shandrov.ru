@@ -1,0 +1,85 @@
+---
+import PicassoImporterCase from "../../../../layouts/PicassoImporterCase.astro";
+---
+
+<PicassoImporterCase
+  lang="en"
+  title="Picasso Importer on TrueNAS"
+  description="Receiving CBCT exports over SMB, verifying packages from ZFS snapshots, and publishing studies for Picasso Viewer without overwriting the archive."
+>
+  <p>
+    The pilot tested how Picasso Viewer and Ez3D2009 open cone-beam CT (CBCT) studies from a shared,
+    read-only directory. The next task was to add new studies to the same archive. We tested the first
+    import manually from Windows, then moved scheduled intake to TrueNAS. The viewing pilot is documented in
+    <a href="https://notes.shandrov.ru/notes/storage-backup/truenas-picasso-ez3d2009-pilot-part-1/">Part 1 of the series</a>.
+  </p>
+
+  <section>
+    <h2>Two SMB shares with different permissions</h2>
+    <p>
+      The uploader sends each export to the Inbox as a separate package. Once the transfer completes,
+      it publishes a JSON readiness marker with the file count, total bytes and manifest hash. The folder
+      becomes visible over SMB during copying, so processing is gated on the marker.
+    </p>
+    <p>
+      The Python importer runs locally on the NAS. Picasso Viewer reads published studies from a separate,
+      read-only SMB share. Workstation write access is limited to the Inbox, and the importer writes to the
+      archive. On TrueNAS, cron checks the queue every five minutes. An operator can also process the next
+      job or a specific job manually for troubleshooting.
+    </p>
+  </section>
+
+  <section>
+    <h2>From a ready package to the viewer directory</h2>
+    <ol>
+      <li>
+        <strong>Capture the input.</strong> Once it finds the marker, the importer reads the package
+        from a ZFS snapshot and rebuilds its manifest from relative paths, sizes and file SHA-256 hashes.
+        It then compares the file count, byte count and manifest hash with the marker. The snapshot
+        fixes the input at the point of verification.
+        <a href="https://openzfs.github.io/openzfs-docs/Basic%20Concepts/Datasets/Snapshots%20and%20Clones.html">OpenZFS documentation</a>.
+      </li>
+      <li>
+        <strong>Validate the structure and look for duplicates.</strong> The pilot export included
+        <code>.dcm</code> files and an <code>.npj</code> project. The importer validates the DICOM files
+        and compares the set against studies in an archive snapshot. It returns
+        <code>ALREADY_IMPORTED_EXACT</code> for a complete byte-for-byte match. Re-exporting or transcoding
+        the same study can change its bytes, so SHA-256 comparison cannot establish clinical equivalence.
+      </li>
+      <li>
+        <strong>Stage and publish.</strong> The importer assembles the package outside the directory that
+        Viewer reads and checks the SHA-256 hashes of the staged files after copying. The final operation
+        uses <code>renameat2</code> with <code>RENAME_NOREPLACE</code> to move the directory within the same
+        mounted filesystem. The complete directory appears at once, and an existing directory with the
+        same name is protected from replacement.
+        <a href="https://man7.org/linux/man-pages/man2/rename.2.html">Linux rename(2) manual</a>.
+      </li>
+    </ol>
+    <p>
+      The original upload stays in the Inbox. If a job fails, the available verification records,
+      snapshots and temporary files are retained for investigation. For a failure around the final rename,
+      check staging, the destination and the job result before retrying. The exit status alone cannot
+      tell you whether the directory had already appeared in the archive.
+    </p>
+  </section>
+
+  <section>
+    <h2>What the tests showed</h2>
+    <ul>
+      <li>
+        <strong>Windows pilot.</strong> All 537 files in the earlier manual import matched their SHA-256
+        hashes (536 DICOM files and one NPJ project). The study opened in Picasso Viewer and Ez3D2009 on
+        one workstation.
+      </li>
+      <li>
+        <strong>Server-side importer.</strong> The first canary run on TrueNAS and its repeat both returned
+        <code>ALREADY_IMPORTED_EXACT</code>. The archive was unchanged and the upload remained in the Inbox.
+        The schedule was enabled following the canary runs.
+      </li>
+      <li>
+        <strong>End-to-end acceptance.</strong> Publishing a new study with the server-side job and opening
+        it on the workstations remains a separate acceptance step.
+      </li>
+    </ul>
+  </section>
+</PicassoImporterCase>
