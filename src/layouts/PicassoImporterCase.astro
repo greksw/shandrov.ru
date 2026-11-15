@@ -1,0 +1,165 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+interface Props {
+  lang: "ru" | "en";
+  title: string;
+  description: string;
+}
+
+const { lang, title, description } = Astro.props;
+const isRu = lang === "ru";
+const home = isRu ? "/" : "/en/";
+---
+
+<BaseLayout title={`${title} — Tudor Shandrov`} description={description} lang={lang}>
+  <SiteHeader lang={lang} />
+  <main>
+    <article>
+      <header class="hero">
+        <div class="site-container">
+          <a class="back" href={`${home}#projects`}>← {isRu ? "Все проекты" : "All projects"}</a>
+          <div class="article-width">
+            <p class="meta">
+              {isRu ? "Часть 2" : "Part 2"} <span aria-hidden="true">·</span>
+              <time datetime="2026-11-15">{isRu ? "15 ноября 2026" : "November 15, 2026"}</time>
+            </p>
+            <h1>{title}</h1>
+            <p class="lead">{description}</p>
+            <ul class="stack" aria-label={isRu ? "Технологии" : "Technologies"}>
+              {["TrueNAS SCALE", "ZFS", "SMB", "Python", "DICOM"].map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="site-container">
+        <div class="article-width body">
+          <slot />
+        </div>
+      </div>
+    </article>
+  </main>
+  <SiteFooter lang={lang} />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(42px, 7vw, 84px) clamp(32px, 5vw, 58px);
+    border-bottom: 1px solid var(--border);
+    background: radial-gradient(ellipse at 32% 0%, rgba(91, 140, 255, .15), transparent 67%);
+  }
+
+  .article-width {
+    max-width: 790px;
+    margin-inline: auto;
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 34px;
+    color: var(--muted-strong);
+    font-size: .84rem;
+  }
+
+  .back:hover {
+    color: var(--text);
+  }
+
+  .meta {
+    margin: 0;
+    color: var(--cyan);
+    font-size: .83rem;
+  }
+
+  h1 {
+    margin: 14px 0 20px;
+    font-size: clamp(2.25rem, 6vw, 4.25rem);
+    line-height: 1.07;
+    letter-spacing: -.05em;
+    overflow-wrap: anywhere;
+  }
+
+  .lead {
+    max-width: 680px;
+    margin: 0;
+    color: var(--muted-strong);
+    font-size: clamp(1rem, 2vw, 1.16rem);
+    line-height: 1.7;
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stack li {
+    padding: 5px 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    color: var(--muted-strong);
+    font-size: .76rem;
+  }
+
+  .body {
+    padding-block: clamp(30px, 5vw, 52px) 68px;
+    color: var(--muted-strong);
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+  }
+
+  .body :global(p) {
+    margin: 0 0 14px;
+  }
+
+  .body :global(section) {
+    margin-top: 38px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .body :global(h2) {
+    margin: 0 0 12px;
+    color: var(--text);
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    line-height: 1.2;
+    letter-spacing: -.027em;
+  }
+
+  .body :global(a) {
+    color: #a8beff;
+    text-decoration: underline;
+    text-underline-offset: .2em;
+  }
+
+  .body :global(a:hover) {
+    color: var(--text);
+  }
+
+  .body :global(ol),
+  .body :global(ul) {
+    padding-inline-start: 1.35rem;
+  }
+
+  .body :global(li) {
+    padding-inline-start: .3rem;
+    margin-block: .5rem;
+  }
+
+  .body :global(strong) {
+    color: var(--text);
+  }
+
+  .body :global(code) {
+    padding: .1em .25em;
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--cyan);
+    font-size: .93em;
+  }
+</style>
