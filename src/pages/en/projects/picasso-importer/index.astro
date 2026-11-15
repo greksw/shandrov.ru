@@ -34,17 +34,18 @@ import PicassoImporterCase from "../../../../layouts/PicassoImporterCase.astro";
     <ol>
       <li>
         <strong>Capture the input.</strong> Once it finds the marker, the importer reads the package
-        from a ZFS snapshot and rebuilds its manifest from relative paths, sizes and file SHA-256 hashes.
-        It then compares the file count, byte count and manifest hash with the marker. The snapshot
-        fixes the input at the point of verification.
+        from a ZFS snapshot. The server checks the file count and byte count against the marker, then
+        compares its own manifests of the live folder and snapshot using file names, sizes and SHA-256
+        hashes. The client hash in the marker is useful for troubleshooting the transfer.
         <a href="https://openzfs.github.io/openzfs-docs/Basic%20Concepts/Datasets/Snapshots%20and%20Clones.html">OpenZFS documentation</a>.
       </li>
       <li>
-        <strong>Validate the structure and look for duplicates.</strong> The pilot export included
-        <code>.dcm</code> files and an <code>.npj</code> project. The importer validates the DICOM files
-        and compares the set against studies in an archive snapshot. It returns
-        <code>ALREADY_IMPORTED_EXACT</code> for a complete byte-for-byte match. Re-exporting or transcoding
-        the same study can change its bytes, so SHA-256 comparison cannot establish clinical equivalence.
+        <strong>Validate the structure and look for duplicates.</strong> A server-side package contains
+        a flat set of <code>.dcm</code> files. The importer reads DICOM headers and scans the archive snapshot
+        for overlapping Study Instance UIDs and SOP Instance UIDs. A full UID match for a new submission
+        returns <code>DUPLICATE_STUDY_SKIPPED</code>. The <code>ALREADY_IMPORTED_EXACT</code> status
+        applies to the same previously published job when the input, archive and post-import snapshot
+        manifests match. Re-exports with new UIDs can require operator review.
       </li>
       <li>
         <strong>Stage and publish.</strong> The importer assembles the package outside the directory that
