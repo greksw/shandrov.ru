@@ -5,7 +5,7 @@ import PicassoImporterCase from "../../../layouts/PicassoImporterCase.astro";
 <PicassoImporterCase
   lang="ru"
   title="Picasso Importer на TrueNAS"
-  description="Как принять экспорт КЛКТ по SMB, проверить пакет по снимку ZFS и опубликовать исследование для Picasso Viewer без перезаписи архива."
+  description="Сквозной импорт КЛКТ из Windows в Picasso Viewer через персональный SMB Inbox, снимки ZFS и публикацию без перезаписи."
 >
   <p>
     В пилоте мы проверили, как Picasso Viewer и Ez3D2009 открывают исследования конусно-лучевой КТ (КЛКТ)
@@ -13,14 +13,15 @@ import PicassoImporterCase from "../../../layouts/PicassoImporterCase.astro";
     в тот же архив. Первую проверку импорта выполнили вручную с Windows, а периодический приём пакетов
     перенесли на TrueNAS. Ход проверки просмотра описан в
     <a href="https://notes.shandrov.ru/ru/notes/storage-backup/truenas-picasso-ez3d2009-pilot-part-1/">первой части серии</a>.
+    <a href="https://notes.shandrov.ru/ru/notes/storage-backup/truenas-picasso-importer-production-part-3/">Схема взаимодействия и сквозная приёмка</a> описаны в третьей части.
   </p>
 
   <section>
     <h2>Два SMB-ресурса с разными правами</h2>
     <p>
       Клиентская загрузка отправляет каждый экспорт отдельным пакетом в Inbox. После передачи файлов
-      клиент публикует JSON-маркер готовности с числом файлов, общим объёмом и хешем манифеста.
-      Папка по SMB видна уже во время копирования, поэтому запуск обработки привязан к маркеру.
+      клиент сверяет копию по SHA-256, создаёт JSON-маркер и переименовывает временный каталог в итоговый.
+      Создание задания в очереди отделено от его последующей публикации в архиве.
     </p>
     <p>
       Серверный Python-импортер работает локально на NAS. Picasso Viewer читает опубликованные исследования
@@ -42,7 +43,8 @@ import PicassoImporterCase from "../../../layouts/PicassoImporterCase.astro";
       </li>
       <li>
         <strong>Проверить структуру и дубликаты.</strong> Серверный пакет содержит плоский набор
-        <code>.dcm</code>. Импортер читает заголовки DICOM и ищет совпадения Study Instance UID и
+        <code>.dcm</code> и оригинальный <code>Default.npj</code> из того же экспорта. Импортер проверяет
+        размер и SHA-256 проекта, читает заголовки DICOM и ищет совпадения Study Instance UID и
         SOP Instance UID по всему снимку архива. Полное совпадение UID нового задания даёт
         <code>DUPLICATE_STUDY_SKIPPED</code>. Статус <code>ALREADY_IMPORTED_EXACT</code> относится к
         тому же ранее опубликованному заданию, когда совпали манифесты входа, архива и снимка после импорта.
@@ -77,8 +79,9 @@ import PicassoImporterCase from "../../../layouts/PicassoImporterCase.astro";
         После контрольных прогонов включили расписание.
       </li>
       <li>
-        <strong>Сквозная проверка серверного импорта.</strong> Публикация нового исследования серверным
-        заданием и его открытие с рабочих станций остаются отдельным этапом приёмки.
+        <strong>Сквозная приёмка.</strong> Два новых полных экспорта отправили из PowerShell и через ярлык.
+        Оба задания получили <code>IMPORTED_VERIFIED</code>, а исследования открылись из Production в Viewer.
+        На другой станции подтверждена автоматическая проверка ярлыков при входе в Windows.
       </li>
     </ul>
   </section>
