@@ -1,0 +1,83 @@
+---
+import MailcowFtsCase from "../../../../layouts/MailcowFtsCase.astro";
+---
+
+<MailcowFtsCase
+  lang="en"
+  title="Full-text search optimization across three Mailcow servers"
+  description="A production Dovecot Flatcurve case study: indexing large mail archives, validating shared mailboxes, and measuring server-side search latency."
+>
+  <p>
+    I examined full-text search configuration, Dovecot indexes and body-search behavior
+    across three independent Mailcow installations. On one server, an archive of roughly
+    1.6 TB included a large INBOX where a message-body search took approximately ten
+    minutes in a mail client. The objective was to make search usable without migrating mail.
+  </p>
+
+  <section>
+    <h2>Implementation</h2>
+    <ol>
+      <li><strong>FTS diagnosis.</strong> Reviewed Mailcow settings, loaded
+        <code>fts</code> and <code>fts_flatcurve</code> plugins, indexer behavior,
+        available disk space and process memory limits.</li>
+      <li><strong>Archive indexing.</strong> Enabled or verified Flatcurve as needed and
+        populated Dovecot indexes sequentially across mailboxes and folders. Initial
+        indexing of the server with approximately 1.6 TB of mail took about 6–7 hours.</li>
+      <li><strong>Shared mailboxes.</strong> Checked searches from a delegate's shared
+        namespace, whose index can differ from the mailbox owner's index. The shared
+        INBOX needed its own indexing pass.</li>
+      <li><strong>Operational checks.</strong> Ran controlled body-search queries,
+        reviewed logs and resource usage, and documented reusable Bash scripts for
+        status checks, sequential indexing and benchmarking.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Measured outcomes</h2>
+    <ul>
+      <li><strong>Approximately 1.6 TB mail archive.</strong> Before the work, a search
+        in the mail client took around <strong>10 minutes</strong>. After indexing,
+        <code>doveadm search</code> found <strong>77 messages in 0.519 s</strong>
+        within the owner's INBOX.</li>
+      <li><strong>Shared INBOX.</strong> Once the delegate's shared index was
+        populated, the same <strong>77 messages</strong> were found in
+        <strong>0.311 s</strong>.</li>
+      <li><strong>Approximately 71 GiB mailbox on another server.</strong> Three
+        post-indexing queries took <strong>2–5 s</strong>. No pre-indexing latency
+        baseline was captured for this mailbox.</li>
+      <li><strong>Third installation.</strong> FTS checks and indexing work were
+        performed; no comparable before/after benchmark was recorded.</li>
+    </ul>
+    <p>
+      <strong>Benchmark caveat:</strong> the original ~10-minute figure was observed
+      in a mail client. The 0.519 s and 0.311 s figures are server-side
+      <code>doveadm</code> command timings, including invocation via Docker Compose.
+      Client rendering, network latency and cache warm-up were not independently
+      measured. These values should not be presented as a controlled end-to-end
+      speedup ratio.
+    </p>
+  </section>
+
+  <section>
+    <h2>Outcome and references</h2>
+    <p>
+      Full-text search became practical on large mail archives: controlled server-side
+      queries completed in fractions of a second, and another server returned
+      post-indexing results in a few seconds. The troubleshooting and indexing
+      procedure is documented for future maintenance.
+    </p>
+    <p>
+      <a href="https://notes.shandrov.ru/ru/notes/mail/mailcow-flatcurve-full-text-search/">
+        Technical walkthrough (in Russian): Flatcurve, indexing and search benchmarks
+      </a>
+      <br />
+      <a href="https://github.com/greksw/notes.shandrov.ru/tree/main/scripts/mailcow-fts">
+        GitHub scripts: status, indexing and benchmarks
+      </a>
+    </p>
+    <p>
+      Customer names, mailbox identifiers, internal addresses, access topology and
+      message contents are intentionally excluded from this public case study.
+    </p>
+  </section>
+</MailcowFtsCase>
